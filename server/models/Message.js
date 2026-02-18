@@ -16,6 +16,16 @@ const messageSchema = new mongoose.Schema({
     required: [true, 'Message content is required'],
     trim: true
   },
+  deliveredTo: [{
+    user: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User'
+    },
+    deliveredAt: {
+      type: Date,
+      default: Date.now
+    }
+  }],
   readBy: [{
     user: {
       type: mongoose.Schema.Types.ObjectId,

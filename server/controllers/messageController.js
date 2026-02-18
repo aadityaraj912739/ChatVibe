@@ -27,6 +27,8 @@ const getMessages = async (req, res) => {
 
     const messages = await Message.find({ chat: chatId })
       .populate('sender', 'username avatar')
+      .populate('deliveredTo.user', 'username')
+      .populate('readBy.user', 'username')
       .sort({ createdAt: -1 })
       .skip(skip)
       .limit(limit);

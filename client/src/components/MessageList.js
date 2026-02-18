@@ -40,6 +40,19 @@ const MessageList = ({ chatId, messages, setMessages }) => {
 
       socket.on('message', handleNewMessage);
 
+      // Listen for delivery receipts
+      socket.on('messageDelivered', ({ messageId, userId }) => {
+        setMessages(prev => prev.map(msg => {
+          if (msg._id === messageId) {
+            return {
+              ...msg,
+              deliveredTo: [...(msg.deliveredTo || []), { user: userId, deliveredAt: new Date() }]
+            };
+          }
+          return msg;
+        }));
+      });
+
       // Listen for read receipts
       socket.on('messageRead', ({ messageId, userId }) => {
         setMessages(prev => prev.map(msg => {
@@ -53,9 +66,30 @@ const MessageList = ({ chatId, messages, setMessages }) => {
         }));
       });
 
+      // Listen for chat read (when all messages are marked as read)
+      socket.on('chatRead', ({ chatId: readChatId, userId }) => {
+        if (readChatId === chatId && userId !== user._id) {
+          setMessages(prev => prev.map(msg => {
+            // Only update messages sent by current user that are not already read by this user
+            if (msg.sender._id === user._id) {
+              const alreadyRead = msg.readBy?.some(r => r.user === userId);
+              if (!alreadyRead) {
+                return {
+                  ...msg,
+                  readBy: [...(msg.readBy || []), { user: userId, readAt: new Date() }]
+                };
+              }
+            }
+            return msg;
+          }));
+        }
+      });
+
       return () => {
         socket.off('message', handleNewMessage);
+        socket.off('messageDelivered');
         socket.off('messageRead');
+        socket.off('chatRead');
       };
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -84,9 +118,17 @@ const MessageList = ({ chatId, messages, setMessages }) => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   };
 
-  const isMessageRead = (message) => {
-    if (message.sender._id !== user._id) return false;
-    return message.readBy && message.readBy.length > 1; // More than just sender
+  const getMessageStatus = (message) => {
+    if (message.sender._id !== user._id) return null;
+    
+    const isRead = message.readBy && message.readBy.length > 0;
+    const isDelivered = message.deliveredTo && message.deliveredTo.length > 0;
+    
+    return {
+      isRead,
+      isDelivered,
+      status: isRead ? 'read' : isDelivered ? 'delivered' : 'sent'
+    };
   };
 
   const typingUsers = getTypingUsers(chatId);
@@ -109,7 +151,7 @@ const MessageList = ({ chatId, messages, setMessages }) => {
         <>
           {messages.map((message) => {
             const isOwnMessage = message.sender._id === user._id;
-            const messageRead = isMessageRead(message);
+            const messageStatus = getMessageStatus(message);
 
             return (
               <div
@@ -139,9 +181,9 @@ const MessageList = ({ chatId, messages, setMessages }) => {
                         <span className={`text-xs ${isOwnMessage ? 'text-primary-100' : 'text-gray-500 dark:text-gray-400'}`}>
                           {format(new Date(message.createdAt), 'HH:mm')}
                         </span>
-                        {isOwnMessage && (
-                          <span className="text-xs">
-                            {messageRead ? '✓✓' : '✓'}
+                        {isOwnMessage && messageStatus && (
+                          <span className={`text-xs ${messageStatus.status === 'read' ? 'text-blue-400' : 'text-primary-100'}`}>
+                            {messageStatus.status === 'sent' ? '✓' : '✓✓'}
                           </span>
                         )}
                       </div>

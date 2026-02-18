@@ -69,9 +69,35 @@ const socketHandler = (io) => {
     });
 
     // Join a specific chat room
-    socket.on('joinChat', (chatId) => {
+    socket.on('joinChat', async (chatId) => {
       socket.join(chatId);
       console.log(`User ${socket.userId} joined chat: ${chatId}`);
+
+      // Mark undelivered messages as delivered when user joins chat
+      try {
+        const undeliveredMessages = await Message.find({
+          chat: chatId,
+          sender: { $ne: socket.userId },
+          'deliveredTo.user': { $ne: socket.userId }
+        });
+
+        for (const message of undeliveredMessages) {
+          message.deliveredTo.push({
+            user: socket.userId,
+            deliveredAt: Date.now()
+          });
+          await message.save();
+
+          // Notify sender about delivery
+          io.to(chatId).emit('messageDelivered', {
+            messageId: message._id,
+            userId: socket.userId,
+            chatId
+          });
+        }
+      } catch (error) {
+        console.error('Error marking messages as delivered:', error);
+      }
     });
 
     // Leave a chat room
@@ -108,10 +134,36 @@ const socketHandler = (io) => {
           });
           
           await chat.save();
+
+          // Mark as delivered for online participants
+          const onlineParticipants = await User.find({
+            _id: { $in: chat.participants },
+            isOnline: true,
+            _id: { $ne: socket.userId }
+          });
+
+          for (const participant of onlineParticipants) {
+            message.deliveredTo.push({
+              user: participant._id,
+              deliveredAt: Date.now()
+            });
+          }
+          await message.save();
         }
 
         // Emit message to all users in the chat
         io.to(chatId).emit('message', message);
+
+        // Emit delivery receipts to sender
+        if (message.deliveredTo.length > 0) {
+          message.deliveredTo.forEach(delivery => {
+            socket.emit('messageDelivered', {
+              messageId: message._id,
+              userId: delivery.user,
+              chatId
+            });
+          });
+        }
 
         // Emit chat update event with transformed unreadCount
         const chatForUpdate = await Chat.findById(chatId);
@@ -162,6 +214,18 @@ const socketHandler = (io) => {
 
         const message = await Message.findById(messageId);
         if (message) {
+          // Mark as delivered if not already
+          const alreadyDelivered = message.deliveredTo.some(
+            d => d.user.toString() === socket.userId
+          );
+          if (!alreadyDelivered) {
+            message.deliveredTo.push({
+              user: socket.userId,
+              deliveredAt: Date.now()
+            });
+          }
+
+          // Mark as read if not already
           const alreadyRead = message.readBy.some(
             r => r.user.toString() === socket.userId
           );
@@ -205,6 +269,18 @@ const socketHandler = (io) => {
         });
 
         for (const message of messages) {
+          // Mark as delivered if not already
+          const alreadyDelivered = message.deliveredTo.some(
+            d => d.user.toString() === socket.userId
+          );
+          if (!alreadyDelivered) {
+            message.deliveredTo.push({
+              user: socket.userId,
+              deliveredAt: Date.now()
+            });
+          }
+
+          // Mark as read
           message.readBy.push({
             user: socket.userId,
             readAt: Date.now()
