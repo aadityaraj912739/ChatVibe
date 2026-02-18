@@ -1,5 +1,5 @@
 const User = require('../models/User');
-const { cloudinary } = require('../config/cloudinary');
+const { cloudinary, uploadToCloudinary } = require('../config/cloudinary');
 
 // @desc    Get all users except current user
 // @route   GET /api/users
@@ -106,17 +106,22 @@ const uploadProfilePicture = async (req, res) => {
     }
 
     // Delete old avatar from Cloudinary if exists
-    if (user.avatar) {
+    if (user.avatar && user.avatar.includes('cloudinary')) {
       try {
-        const publicId = user.avatar.split('/').slice(-2).join('/').split('.')[0];
-        await cloudinary.uploader.destroy(`chatvibe/profiles/${publicId}`);
+        const urlParts = user.avatar.split('/');
+        const publicIdWithExt = urlParts.slice(-2).join('/');
+        const publicId = publicIdWithExt.substring(0, publicIdWithExt.lastIndexOf('.'));
+        await cloudinary.uploader.destroy(publicId);
       } catch (error) {
         console.error('Error deleting old avatar:', error);
       }
     }
 
+    // Upload new image to Cloudinary
+    const result = await uploadToCloudinary(req.file.buffer, 'chatvibe/profiles');
+
     // Update user avatar with new Cloudinary URL
-    user.avatar = req.file.path;
+    user.avatar = result.secure_url;
     await user.save();
 
     res.json({
@@ -125,7 +130,7 @@ const uploadProfilePicture = async (req, res) => {
     });
   } catch (error) {
     console.error('Upload profile picture error:', error);
-    res.status(500).json({ message: 'Server error' });
+    res.status(500).json({ message: 'Error uploading image', error: error.message });
   }
 };
 

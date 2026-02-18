@@ -1,6 +1,6 @@
 const Message = require('../models/Message');
 const Chat = require('../models/Chat');
-const { cloudinary } = require('../config/cloudinary');
+const { uploadToCloudinary } = require('../config/cloudinary');
 
 // @desc    Get messages for a chat
 // @route   GET /api/messages/:chatId
@@ -206,12 +206,15 @@ const sendImageMessage = async (req, res) => {
       return res.status(403).json({ message: 'Not authorized to send messages in this chat' });
     }
 
+    // Upload image to Cloudinary
+    const result = await uploadToCloudinary(req.file.buffer, 'chatvibe/messages');
+
     // Create message with image
     let message = await Message.create({
       chat: chatId,
       sender: req.user._id,
       content: req.body.caption || 'Image',
-      imageUrl: req.file.path,
+      imageUrl: result.secure_url,
       messageType: 'image'
     });
 
@@ -248,7 +251,7 @@ const sendImageMessage = async (req, res) => {
     res.status(201).json(message);
   } catch (error) {
     console.error('Send image message error:', error);
-    res.status(500).json({ message: 'Server error' });
+    res.status(500).json({ message: 'Error uploading image', error: error.message });
   }
 };
 

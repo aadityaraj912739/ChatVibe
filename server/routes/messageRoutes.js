@@ -8,11 +8,11 @@ const {
   markChatAsRead 
 } = require('../controllers/messageController');
 const { protect } = require('../middleware/auth');
-const { uploadMessage } = require('../config/cloudinary');
+const { upload } = require('../config/cloudinary');
 
 router.get('/:chatId', protect, getMessages);
 router.post('/', protect, sendMessage);
-router.post('/upload-image', protect, uploadMessage.single('image'), sendImageMessage);
+router.post('/upload-image', protect, upload.single('image'), sendImageMessage);
 router.put('/:id/read', protect, markAsRead);
 router.put('/chat/:chatId/read', protect, markChatAsRead);
 

@@ -1,5 +1,4 @@
 const cloudinary = require('cloudinary').v2;
-const { CloudinaryStorage } = require('multer-storage-cloudinary');
 const multer = require('multer');
 
 // Configure Cloudinary
@@ -9,41 +8,50 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_API_SECRET
 });
 
-// Storage for profile pictures
-const profileStorage = new CloudinaryStorage({
-  cloudinary: cloudinary,
-  params: {
-    folder: 'chatvibe/profiles',
-    allowed_formats: ['jpg', 'jpeg', 'png', 'gif', 'webp'],
-    transformation: [{ width: 500, height: 500, crop: 'limit' }],
-    upload_preset: process.env.CLOUDINARY_UPLOAD_PRESET
-  }
-});
+// Use memory storage instead of disk storage
+const storage = multer.memoryStorage();
 
-// Storage for message images
-const messageStorage = new CloudinaryStorage({
-  cloudinary: cloudinary,
-  params: {
-    folder: 'chatvibe/messages',
-    allowed_formats: ['jpg', 'jpeg', 'png', 'gif', 'webp'],
-    transformation: [{ width: 1200, height: 1200, crop: 'limit' }],
-    upload_preset: process.env.CLOUDINARY_UPLOAD_PRESET
+// File filter to accept only images
+const fileFilter = (req, file, cb) => {
+  if (file.mimetype.startsWith('image/')) {
+    cb(null, true);
+  } else {
+    cb(new Error('Only image files are allowed!'), false);
   }
-});
+};
 
 // Multer upload middleware
-const uploadProfile = multer({ 
-  storage: profileStorage,
-  limits: { fileSize: 5 * 1024 * 1024 } // 5MB limit
-});
-
-const uploadMessage = multer({ 
-  storage: messageStorage,
+const upload = multer({
+  storage: storage,
+  fileFilter: fileFilter,
   limits: { fileSize: 10 * 1024 * 1024 } // 10MB limit
 });
 
+// Helper function to upload buffer to Cloudinary
+const uploadToCloudinary = (buffer, folder) => {
+  return new Promise((resolve, reject) => {
+    const uploadStream = cloudinary.uploader.upload_stream(
+      {
+        folder: folder,
+        resource_type: 'image',
+        transformation: folder === 'chatvibe/profiles' 
+          ? [{ width: 500, height: 500, crop: 'limit' }]
+          : [{ width: 1200, height: 1200, crop: 'limit' }]
+      },
+      (error, result) => {
+        if (error) {
+          reject(error);
+        } else {
+          resolve(result);
+        }
+      }
+    );
+    uploadStream.end(buffer);
+  });
+};
+
 module.exports = {
   cloudinary,
-  uploadProfile,
-  uploadMessage
+  upload,
+  uploadToCloudinary
 };
