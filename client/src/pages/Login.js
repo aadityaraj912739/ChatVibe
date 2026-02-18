@@ -40,11 +40,11 @@ const Login = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-primary-500 to-primary-700 dark:from-gray-900 dark:to-gray-800 flex items-center justify-center px-4">
-      <div className="max-w-md w-full space-y-8 bg-white dark:bg-gray-800 p-8 rounded-2xl shadow-2xl relative">
+    <div className="min-h-screen bg-gradient-to-br from-primary-500 to-primary-700 dark:from-gray-900 dark:to-gray-800 flex items-center justify-center px-4 py-8">
+      <div className="max-w-md w-full space-y-6 md:space-y-8 bg-white dark:bg-gray-800 p-6 md:p-8 rounded-2xl shadow-2xl relative">
         <button
           onClick={toggleTheme}
-          className="absolute top-4 right-4 p-2 rounded-lg bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors"
+          className="absolute top-3 right-3 md:top-4 md:right-4 p-2 rounded-lg bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors"
           title={isDarkMode ? 'Light Mode' : 'Dark Mode'}
         >
           {isDarkMode ? (
@@ -55,7 +55,7 @@ const Login = () => {
         </button>
 
         <div className="text-center">
-          <h2 className="text-4xl font-extrabold text-gray-900 dark:text-gray-100">ChatVibe</h2>
+          <h2 className="text-3xl md:text-4xl font-extrabold text-gray-900 dark:text-gray-100">ChatVibe</h2>
           <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">Sign in to your account</p>
         </div>
         

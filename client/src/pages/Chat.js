@@ -13,6 +13,7 @@ const Chat = () => {
   const [loading, setLoading] = useState(true);
   const [showGroupModal, setShowGroupModal] = useState(false);
   const [showGroupInfo, setShowGroupInfo] = useState(false);
+  const [showSidebar, setShowSidebar] = useState(true);
   const { socketService, socket } = useSocket();
   const { user } = useAuth();
   const windowFocusedRef = useRef(true);
@@ -358,18 +359,29 @@ const Chat = () => {
 
   return (
     <div className="h-screen flex overflow-hidden bg-gray-100 dark:bg-gray-900">
-      <Sidebar
-        chats={chats}
-        selectedChat={selectedChat}
-        onSelectChat={handleSelectChat}
-        onNewChat={handleNewChat}
-        onCreateGroup={() => setShowGroupModal(true)}
-      />
-      <ChatWindow
-        chat={selectedChat}
-        onChatUpdate={handleChatUpdate}
-        onShowGroupInfo={() => setShowGroupInfo(true)}
-      />
+      {/* Sidebar - Hidden on mobile when chat is selected */}
+      <div className={`${showSidebar ? 'flex' : 'hidden'} md:flex w-full md:w-80 lg:w-96`}>
+        <Sidebar
+          chats={chats}
+          selectedChat={selectedChat}
+          onSelectChat={(chat) => {
+            handleSelectChat(chat);
+            setShowSidebar(false); // Hide sidebar on mobile when chat selected
+          }}
+          onNewChat={handleNewChat}
+          onCreateGroup={() => setShowGroupModal(true)}
+        />
+      </div>
+      
+      {/* Chat Window - Hidden on mobile when no chat selected */}
+      <div className={`${!showSidebar ? 'flex' : 'hidden'} md:flex flex-1`}>
+        <ChatWindow
+          chat={selectedChat}
+          onChatUpdate={handleChatUpdate}
+          onShowGroupInfo={() => setShowGroupInfo(true)}
+          onBack={() => setShowSidebar(true)} // Show sidebar when back button clicked
+        />
+      </div>
       
       {/* Group Chat Creation Modal */}
       <GroupChatModal

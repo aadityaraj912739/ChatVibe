@@ -23,6 +23,11 @@ export const SocketProvider = ({ children }) => {
       const newSocket = socketService.connect(token);
       setSocket(newSocket);
 
+      // Get initial online users list
+      newSocket.on('onlineUsers', (data) => {
+        setOnlineUsers(data.userIds);
+      });
+
       // Listen for user online/offline events
       newSocket.on('userOnline', (data) => {
         setOnlineUsers((prev) => {

@@ -100,10 +100,10 @@ const MessageList = ({ chatId, messages, setMessages }) => {
   }
 
   return (
-    <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-gray-50 dark:bg-gray-900">
+    <div className="flex-1 overflow-y-auto p-3 md:p-4 space-y-3 md:space-y-4 bg-gray-50 dark:bg-gray-900">
       {messages.length === 0 ? (
         <div className="flex items-center justify-center h-full">
-          <p className="text-gray-500 dark:text-gray-400">No messages yet. Start the conversation!</p>
+          <p className="text-sm md:text-base text-gray-500 dark:text-gray-400 px-4 text-center">No messages yet. Start the conversation!</p>
         </div>
       ) : (
         <>
@@ -116,24 +116,25 @@ const MessageList = ({ chatId, messages, setMessages }) => {
                 key={message._id}
                 className={`flex ${isOwnMessage ? 'justify-end' : 'justify-start'}`}
               >
-                <div className={`flex items-end space-x-2 max-w-[70%] ${isOwnMessage ? 'flex-row-reverse space-x-reverse' : ''}`}>
+                <div className={`flex items-end space-x-2 max-w-[80%] md:max-w-[75%] ${isOwnMessage ? 'flex-row-reverse space-x-reverse' : ''}`}>
                   {!isOwnMessage && (
                     <Avatar user={message.sender} size="sm" className="flex-shrink-0" />
                   )}
-                  <div>
+                  <div className="flex flex-col">
                     {!isOwnMessage && (
                       <p className="text-xs text-gray-600 dark:text-gray-400 mb-1 px-3">
                         {message.sender.username}
                       </p>
                     )}
                     <div
-                      className={`message-bubble px-4 py-2 rounded-2xl ${
+                      className={`message-bubble inline-block px-3 md:px-4 py-2 rounded-2xl ${
                         isOwnMessage
                           ? 'bg-primary-600 dark:bg-primary-700 text-white rounded-br-none'
                           : 'bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 rounded-bl-none shadow-sm'
                       }`}
+                      style={{ maxWidth: 'fit-content' }}
                     >
-                      <p className="break-words">{message.content}</p>
+                      <p className="whitespace-pre-wrap text-sm md:text-base" style={{ lineHeight: '1.5rem', wordBreak: 'keep-all', overflowWrap: 'break-word', maxWidth: '500px' }}>{message.content}</p>
                       <div className="flex items-center justify-end space-x-1 mt-1">
                         <span className={`text-xs ${isOwnMessage ? 'text-primary-100' : 'text-gray-500 dark:text-gray-400'}`}>
                           {format(new Date(message.createdAt), 'HH:mm')}
@@ -154,8 +155,8 @@ const MessageList = ({ chatId, messages, setMessages }) => {
           {/* Typing Indicator */}
           {typingUsers.length > 0 && (
             <div className="flex justify-start">
-              <div className="bg-gray-200 dark:bg-gray-700 px-4 py-2 rounded-2xl">
-                <p className="text-sm text-gray-600 dark:text-gray-300">
+              <div className="bg-gray-200 dark:bg-gray-700 px-3 md:px-4 py-2 rounded-2xl">
+                <p className="text-xs md:text-sm text-gray-600 dark:text-gray-300">
                   {typingUsers.join(', ')} {typingUsers.length === 1 ? 'is' : 'are'} typing...
                 </p>
               </div>

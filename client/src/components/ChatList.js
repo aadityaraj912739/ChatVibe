@@ -44,8 +44,8 @@ const ChatList = ({ chats, selectedChat, onSelectChat }) => {
     return (
       <div className="flex-1 flex items-center justify-center p-4">
         <div className="text-center text-gray-500 dark:text-gray-400">
-          <p className="text-lg font-medium">No chats yet</p>
-          <p className="text-sm mt-1">Start a new conversation!</p>
+          <p className="text-base md:text-lg font-medium">No chats yet</p>
+          <p className="text-xs md:text-sm mt-1">Start a new conversation!</p>
         </div>
       </div>
     );
@@ -63,11 +63,11 @@ const ChatList = ({ chats, selectedChat, onSelectChat }) => {
           <div
             key={chat._id}
             onClick={() => onSelectChat(chat)}
-            className={`p-4 border-b border-gray-200 dark:border-gray-700 cursor-pointer transition-colors hover:bg-gray-50 dark:hover:bg-gray-800 ${
+            className={`p-3 md:p-4 border-b border-gray-200 dark:border-gray-700 cursor-pointer transition-colors hover:bg-gray-50 dark:hover:bg-gray-800 ${
               isSelected ? 'bg-primary-50 dark:bg-gray-800 border-l-4 border-l-primary-600' : ''
             }`}
           >
-            <div className="flex items-center space-x-3">
+            <div className="flex items-center space-x-2 md:space-x-3">
               <Avatar 
                 user={getChatUser(chat)} 
                 size="lg" 
@@ -77,18 +77,18 @@ const ChatList = ({ chats, selectedChat, onSelectChat }) => {
               
               <div className="flex-1 min-w-0">
                 <div className="flex items-center justify-between">
-                  <p className={`font-semibold text-gray-900 dark:text-gray-100 truncate ${unreadCount > 0 ? 'font-bold' : ''}`}>
+                  <p className={`text-sm md:text-base font-semibold text-gray-900 dark:text-gray-100 truncate ${unreadCount > 0 ? 'font-bold' : ''}`}>
                     {getChatName(chat)}
                   </p>
                   {chat.lastMessage && (
-                    <span className="text-xs text-gray-500 dark:text-gray-400">
+                    <span className="text-xs text-gray-500 dark:text-gray-400 ml-2 flex-shrink-0">
                       {formatDistanceToNow(new Date(chat.lastMessage.createdAt), { addSuffix: true })}
                     </span>
                   )}
                 </div>
                 
                 <div className="flex items-center justify-between mt-1">
-                  <p className={`text-sm truncate ${unreadCount > 0 ? 'text-gray-900 dark:text-gray-200 font-medium' : 'text-gray-600 dark:text-gray-400'}`}>
+                  <p className={`text-xs md:text-sm truncate ${unreadCount > 0 ? 'text-gray-900 dark:text-gray-200 font-medium' : 'text-gray-600 dark:text-gray-400'}`}>
                     {getLastMessagePreview(chat)}
                   </p>
                   {unreadCount > 0 && (

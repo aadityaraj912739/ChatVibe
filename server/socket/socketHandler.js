@@ -40,7 +40,14 @@ const socketHandler = (io) => {
         lastSeen: Date.now()
       });
 
-      // Broadcast user online status
+      // Get all currently online users
+      const onlineUsers = await User.find({ isOnline: true }).select('_id');
+      const onlineUserIds = onlineUsers.map(u => u._id.toString());
+
+      // Send online users list to the newly connected user
+      socket.emit('onlineUsers', { userIds: onlineUserIds });
+
+      // Broadcast user online status to all other users
       socket.broadcast.emit('userOnline', {
         userId: socket.userId,
         isOnline: true

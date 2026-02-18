@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { useSocket } from '../context/SocketContext';
-import { InformationCircleIcon } from '@heroicons/react/24/outline';
+import { InformationCircleIcon, ArrowLeftIcon } from '@heroicons/react/24/outline';
+import { formatDistanceToNow } from 'date-fns';
 import MessageList from './MessageList';
 import MessageInput from './MessageInput';
 import Avatar from './Avatar';
 
-const ChatWindow = ({ chat, onChatUpdate, onShowGroupInfo }) => {
+const ChatWindow = ({ chat, onChatUpdate, onShowGroupInfo, onBack }) => {
   const { user } = useAuth();
   const { isUserOnline } = useSocket();
   const [messages, setMessages] = useState([]);
@@ -33,6 +34,31 @@ const ChatWindow = ({ chat, onChatUpdate, onShowGroupInfo }) => {
     return getOtherUser();
   };
 
+  const getStatusText = () => {
+    if (chat.isGroupChat) {
+      return `${chat.participants?.length || 0} members`;
+    }
+    
+    if (!otherUser) return 'Offline';
+    
+    const isOnline = isUserOnline(otherUser._id);
+    if (isOnline) {
+      return 'Online';
+    }
+    
+    // Show last seen if user is offline
+    if (otherUser.lastSeen) {
+      try {
+        const lastSeenText = formatDistanceToNow(new Date(otherUser.lastSeen), { addSuffix: true });
+        return `Offline • Last seen ${lastSeenText}`;
+      } catch (error) {
+        return 'Offline';
+      }
+    }
+    
+    return 'Offline';
+  };
+
   if (!chat) {
     return (
       <div className="flex-1 flex items-center justify-center bg-gray-50 dark:bg-gray-900">
@@ -55,9 +81,19 @@ const ChatWindow = ({ chat, onChatUpdate, onShowGroupInfo }) => {
   return (
     <div className="flex-1 flex flex-col bg-white dark:bg-gray-800">
       {/* Chat Header */}
-      <div className="p-4 border-b border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 shadow-sm">
+      <div className="p-3 md:p-4 border-b border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 shadow-sm">
         <div className="flex items-center justify-between">
-          <div className="flex items-center space-x-3 flex-1 min-w-0">
+          <div className="flex items-center space-x-2 md:space-x-3 flex-1 min-w-0">
+            {/* Back button for mobile */}
+            {onBack && (
+              <button
+                onClick={onBack}
+                className="md:hidden p-1.5 text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors flex-shrink-0"
+                title="Back to chats"
+              >
+                <ArrowLeftIcon className="h-5 w-5" />
+              </button>
+            )}
             <Avatar 
               user={getChatUser()} 
               size="md" 
@@ -65,21 +101,21 @@ const ChatWindow = ({ chat, onChatUpdate, onShowGroupInfo }) => {
               isOnline={isOnline}
             />
             <div className="flex-1 min-w-0">
-              <p className="font-semibold text-gray-900 dark:text-gray-100 truncate">
+              <p className="font-semibold text-sm md:text-base text-gray-900 dark:text-gray-100 truncate">
                 {getChatName()}
               </p>
-              <p className="text-sm text-gray-500 dark:text-gray-400">
-                {chat.isGroupChat ? `${chat.participants?.length || 0} members` : (isOnline ? 'Online' : 'Offline')}
+              <p className="text-xs md:text-sm text-gray-500 dark:text-gray-400">
+                {getStatusText()}
               </p>
             </div>
           </div>
           {chat.isGroupChat && (
             <button
               onClick={onShowGroupInfo}
-              className="p-2 text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
+              className="p-1.5 md:p-2 text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors flex-shrink-0"
               title="Group Info"
             >
-              <InformationCircleIcon className="h-6 w-6" />
+              <InformationCircleIcon className="h-5 w-5 md:h-6 md:w-6" />
             </button>
           )}
         </div>
