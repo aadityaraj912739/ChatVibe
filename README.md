@@ -36,6 +36,15 @@ A modern, real-time chat application built with the MERN stack and Socket.IO.
 - Socket.IO
 - JWT Authentication
 - Bcrypt
+- Cloudinary (Image uploads)
+
+## Documentation 📚
+
+- 📖 [Quick Start Guide](QUICKSTART.md)
+- 🚀 [Deployment Guide](DEPLOYMENT.md) - Deploy to Vercel & Render
+- ☁️ [Cloudinary Setup](CLOUDINARY_SETUP.md) - Configure image uploads
+- 👥 [Group Chat Guide](GROUP_CHAT_GUIDE.md)
+- ✨ [Features Documentation](FEATURES.md)
 
 ## Project Structure 📁
 
@@ -81,6 +90,13 @@ PORT=5000
 MONGODB_URI=your_mongodb_connection_string
 JWT_SECRET=your_jwt_secret_key
 NODE_ENV=development
+CLIENT_URL=http://localhost:3000
+
+# Cloudinary Configuration
+CLOUDINARY_CLOUD_NAME=your_cloudinary_cloud_name
+CLOUDINARY_API_KEY=your_cloudinary_api_key
+CLOUDINARY_API_SECRET=your_cloudinary_api_secret
+CLOUDINARY_UPLOAD_PRESET=your_cloudinary_preset
 ```
 
 4. Start the server:

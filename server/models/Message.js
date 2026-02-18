@@ -13,8 +13,11 @@ const messageSchema = new mongoose.Schema({
   },
   content: {
     type: String,
-    required: [true, 'Message content is required'],
     trim: true
+  },
+  imageUrl: {
+    type: String,
+    default: null
   },
   deliveredTo: [{
     user: {

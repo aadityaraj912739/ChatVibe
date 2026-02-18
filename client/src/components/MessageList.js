@@ -22,7 +22,7 @@ const MessageList = ({ chatId, messages, setMessages }) => {
     if (socket && chatId) {
       // Listen for new messages
       const handleNewMessage = (message) => {
-        if (message.chat === chatId) {
+        if (message.chat === chatId && message.sender) {
           setMessages(prev => {
             // Avoid duplicates
             if (prev.find(m => m._id === message._id)) {
@@ -149,7 +149,7 @@ const MessageList = ({ chatId, messages, setMessages }) => {
         </div>
       ) : (
         <>
-          {messages.map((message) => {
+          {messages.filter(message => message && message.sender).map((message) => {
             const isOwnMessage = message.sender._id === user._id;
             const messageStatus = getMessageStatus(message);
 
@@ -176,7 +176,19 @@ const MessageList = ({ chatId, messages, setMessages }) => {
                       }`}
                       style={{ maxWidth: 'fit-content' }}
                     >
-                      <p className="whitespace-pre-wrap text-sm md:text-base" style={{ lineHeight: '1.5rem', wordBreak: 'keep-all', overflowWrap: 'break-word', maxWidth: '500px' }}>{message.content}</p>
+                      {message.messageType === 'image' && message.imageUrl && (
+                        <div className="mb-2">
+                          <img 
+                            src={message.imageUrl} 
+                            alt="Shared content" 
+                            className="rounded-lg max-w-xs max-h-64 object-cover cursor-pointer"
+                            onClick={() => window.open(message.imageUrl, '_blank')}
+                          />
+                        </div>
+                      )}
+                      {message.content && (
+                        <p className="whitespace-pre-wrap text-sm md:text-base" style={{ lineHeight: '1.5rem', wordBreak: 'keep-all', overflowWrap: 'break-word', maxWidth: '500px' }}>{message.content}</p>
+                      )}
                       <div className="flex items-center justify-end space-x-1 mt-1">
                         <span className={`text-xs ${isOwnMessage ? 'text-primary-100' : 'text-gray-500 dark:text-gray-400'}`}>
                           {format(new Date(message.createdAt), 'HH:mm')}

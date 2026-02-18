@@ -1,13 +1,18 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { PaperAirplaneIcon } from '@heroicons/react/24/solid';
+import { PaperAirplaneIcon, PhotoIcon, XMarkIcon } from '@heroicons/react/24/solid';
 import { useSocket } from '../context/SocketContext';
+import { messageAPI } from '../services/api';
 
 const MessageInput = ({ chatId, onMessageSent }) => {
   const [message, setMessage] = useState('');
   const [isTyping, setIsTyping] = useState(false);
+  const [selectedImage, setSelectedImage] = useState(null);
+  const [imagePreview, setImagePreview] = useState(null);
+  const [uploading, setUploading] = useState(false);
   const { socketService } = useSocket();
   const typingTimeoutRef = useRef(null);
   const inputRef = useRef(null);
+  const fileInputRef = useRef(null);
 
   useEffect(() => {
     // Focus input when chat changes
@@ -16,6 +21,9 @@ const MessageInput = ({ chatId, onMessageSent }) => {
     if (inputRef.current) {
       inputRef.current.style.height = '44px';
     }
+    // Clear image preview when chat changes
+    setSelectedImage(null);
+    setImagePreview(null);
   }, [chatId]);
 
   useEffect(() => {
@@ -51,7 +59,13 @@ const MessageInput = ({ chatId, onMessageSent }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
     
-    if (message.trim() === '') return;
+    if (message.trim() === '' && !selectedImage) return;
+
+    // If image is selected, upload it
+    if (selectedImage) {
+      handleImageUpload();
+      return;
+    }
 
     // Send message via socket
     socketService.sendMessage({
@@ -82,6 +96,59 @@ const MessageInput = ({ chatId, onMessageSent }) => {
     playNotificationSound();
   };
 
+  const handleImageSelect = (e) => {
+    const file = e.target.files[0];
+    if (file && file.type.startsWith('image/')) {
+      setSelectedImage(file);
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setImagePreview(reader.result);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const handleImageUpload = async () => {
+    if (!selectedImage) return;
+
+    setUploading(true);
+    try {
+      const formData = new FormData();
+      formData.append('image', selectedImage);
+      formData.append('chatId', chatId);
+      formData.append('caption', message.trim());
+
+      await messageAPI.sendImageMessage(formData);
+      
+      // Clear inputs
+      setMessage('');
+      setSelectedImage(null);
+      setImagePreview(null);
+      
+      if (inputRef.current) {
+        inputRef.current.style.height = '44px';
+      }
+
+      // Play notification sound
+      playNotificationSound();
+      
+      if (onMessageSent) onMessageSent();
+    } catch (error) {
+      console.error('Image upload error:', error);
+      alert('Failed to upload image. Please try again.');
+    } finally {
+      setUploading(false);
+    }
+  };
+
+  const handleClearImage = () => {
+    setSelectedImage(null);
+    setImagePreview(null);
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
+    }
+  };
+
   const handleKeyDown = (e) => {
     // Send message on Enter (without Shift)
     if (e.key === 'Enter' && !e.shiftKey) {
@@ -103,24 +170,59 @@ const MessageInput = ({ chatId, onMessageSent }) => {
 
   return (
     <div className="p-3 md:p-4 border-t border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800">
+      {imagePreview && (
+        <div className="mb-3 relative inline-block">
+          <img 
+            src={imagePreview} 
+            alt="Preview" 
+            className="max-h-32 rounded-lg border border-gray-300 dark:border-gray-600"
+          />
+          <button
+            type="button"
+            onClick={handleClearImage}
+            className="absolute -top-2 -right-2 p-1 bg-red-500 text-white rounded-full hover:bg-red-600"
+          >
+            <XMarkIcon className="h-4 w-4" />
+          </button>
+        </div>
+      )}
       <form onSubmit={handleSubmit} className="flex items-end space-x-2">
+        <input
+          ref={fileInputRef}
+          type="file"
+          accept="image/*"
+          onChange={handleImageSelect}
+          className="hidden"
+        />
+        <button
+          type="button"
+          onClick={() => fileInputRef.current?.click()}
+          className="p-2.5 md:p-3 bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-full hover:bg-gray-300 dark:hover:bg-gray-600 transition-all duration-150 flex-shrink-0"
+          title="Attach image"
+        >
+          <PhotoIcon className="h-5 w-5 md:h-6 md:w-6" />
+        </button>
         <textarea
           ref={inputRef}
           value={message}
           onChange={handleTyping}
           onKeyDown={handleKeyDown}
-          placeholder="Type a message..."
+          placeholder={selectedImage ? "Add a caption (optional)..." : "Type a message..."}
           rows={1}
           className="flex-1 px-3 md:px-4 py-2 text-sm md:text-base border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 rounded-2xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent resize-none overflow-y-auto transition-all duration-150"
           style={{ minHeight: '44px', maxHeight: '128px', whiteSpace: 'pre-wrap', lineHeight: '1.5rem', wordBreak: 'keep-all', overflowWrap: 'break-word' }}
         />
         <button
           type="submit"
-          disabled={message.trim() === ''}
+          disabled={(message.trim() === '' && !selectedImage) || uploading}
           className="p-2.5 md:p-3 bg-primary-600 dark:bg-primary-700 text-white rounded-full hover:bg-primary-700 dark:hover:bg-primary-800 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-150 flex-shrink-0 shadow-sm hover:shadow-md disabled:hover:shadow-sm"
-          title={message.trim() === '' ? 'Type a message to send' : 'Send message (Enter)'}
+          title={uploading ? 'Uploading...' : selectedImage ? 'Send image' : message.trim() === '' ? 'Type a message to send' : 'Send message (Enter)'}
         >
-          <PaperAirplaneIcon className="h-5 w-5 md:h-6 md:w-6" />
+          {uploading ? (
+            <div className="h-5 w-5 md:h-6 md:w-6 border-2 border-white border-t-transparent rounded-full animate-spin" />
+          ) : (
+            <PaperAirplaneIcon className="h-5 w-5 md:h-6 md:w-6" />
+          )}
         </button>
       </form>
       <p className="text-xs text-gray-400 dark:text-gray-500 mt-1.5 ml-1">

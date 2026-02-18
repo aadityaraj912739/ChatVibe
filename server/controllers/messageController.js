@@ -1,5 +1,6 @@
 const Message = require('../models/Message');
 const Chat = require('../models/Chat');
+const { cloudinary } = require('../config/cloudinary');
 
 // @desc    Get messages for a chat
 // @route   GET /api/messages/:chatId
@@ -176,9 +177,85 @@ const markChatAsRead = async (req, res) => {
   }
 };
 
+// @desc    Send a message with image
+// @route   POST /api/messages/upload-image
+// @access  Private
+const sendImageMessage = async (req, res) => {
+  try {
+    const { chatId } = req.body;
+
+    if (!chatId) {
+      return res.status(400).json({ message: 'Chat ID is required' });
+    }
+
+    if (!req.file) {
+      return res.status(400).json({ message: 'No image file uploaded' });
+    }
+
+    // Verify chat exists and user is participant
+    const chat = await Chat.findById(chatId);
+    if (!chat) {
+      return res.status(404).json({ message: 'Chat not found' });
+    }
+
+    const isParticipant = chat.participants.some(
+      p => p.toString() === req.user._id.toString()
+    );
+
+    if (!isParticipant) {
+      return res.status(403).json({ message: 'Not authorized to send messages in this chat' });
+    }
+
+    // Create message with image
+    let message = await Message.create({
+      chat: chatId,
+      sender: req.user._id,
+      content: req.body.caption || 'Image',
+      imageUrl: req.file.path,
+      messageType: 'image'
+    });
+
+    message = await message.populate('sender', 'username avatar');
+
+    // Update chat's last message
+    chat.lastMessage = message._id;
+    
+    // Increment unread count for other participants
+    chat.participants.forEach(participantId => {
+      if (participantId.toString() !== req.user._id.toString()) {
+        const count = chat.unreadCount.get(participantId.toString()) || 0;
+        chat.unreadCount.set(participantId.toString(), count + 1);
+      }
+    });
+    
+    await chat.save();
+
+    // Emit message via Socket.IO to all users in the chat
+    const io = req.app.get('io');
+    if (io) {
+      io.to(chatId).emit('message', message);
+      
+      // Emit chat update event
+      const chatObj = chat.toObject();
+      chatObj.unreadCount = Object.fromEntries(chat.unreadCount || new Map());
+      io.to(chatId).emit('chatUpdated', {
+        chatId,
+        lastMessage: message,
+        unreadCount: chatObj.unreadCount
+      });
+    }
+
+    res.status(201).json(message);
+  } catch (error) {
+    console.error('Send image message error:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+};
+
 module.exports = {
   getMessages,
   sendMessage,
+  sendImageMessage,
   markAsRead,
   markChatAsRead
 };

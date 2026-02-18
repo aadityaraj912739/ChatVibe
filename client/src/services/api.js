@@ -48,7 +48,16 @@ export const authAPI = {
 export const userAPI = {
   getUsers: (search) => api.get('/users', { params: { search } }),
   getUserById: (id) => api.get(`/users/${id}`),
-  updateUser: (id, userData) => api.put(`/users/${id}`, userData)
+  updateUser: (id, userData) => api.put(`/users/${id}`, userData),
+  uploadProfilePicture: (formData) => {
+    const token = localStorage.getItem('token');
+    return axios.post(`${API_URL}/api/users/upload-profile`, formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+        'Authorization': `Bearer ${token}`
+      }
+    });
+  }
 };
 
 // Chat API
@@ -69,6 +78,15 @@ export const messageAPI = {
   getMessages: (chatId, page = 1, limit = 50) => 
     api.get(`/messages/${chatId}`, { params: { page, limit } }),
   sendMessage: (data) => api.post('/messages', data),
+  sendImageMessage: (formData) => {
+    const token = localStorage.getItem('token');
+    return axios.post(`${API_URL}/api/messages/upload-image`, formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+        'Authorization': `Bearer ${token}`
+      }
+    });
+  },
   markAsRead: (messageId) => api.put(`/messages/${messageId}/read`),
   markChatAsRead: (chatId) => api.put(`/messages/chat/${chatId}/read`)
 };

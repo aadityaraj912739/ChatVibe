@@ -5,11 +5,13 @@ import { MagnifyingGlassIcon, UserPlusIcon, ArrowRightOnRectangleIcon, SunIcon, 
 import ChatList from './ChatList';
 import UserSearch from './UserSearch';
 import Avatar from './Avatar';
+import ProfileModal from './ProfileModal';
 
 const Sidebar = ({ chats, selectedChat, onSelectChat, onNewChat, onCreateGroup }) => {
   const { user, logout } = useAuth();
   const { isDarkMode, toggleTheme } = useTheme();
   const [showSearch, setShowSearch] = useState(false);
+  const [showProfile, setShowProfile] = useState(false);
 
   const getTotalUnreadCount = () => {
     return chats.reduce((total, chat) => {
@@ -62,9 +64,13 @@ const Sidebar = ({ chats, selectedChat, onSelectChat, onNewChat, onCreateGroup }
         </div>
         
         <div className="flex items-center space-x-2">
-          <div className="border-2 border-white rounded-full">
+          <button 
+            onClick={() => setShowProfile(true)}
+            className="border-2 border-white rounded-full hover:border-primary-200 transition-colors cursor-pointer"
+            title="Edit profile"
+          >
             <Avatar user={user} size="md" />
-          </div>
+          </button>
           <div className="flex-1 min-w-0">
             <p className="font-semibold truncate text-sm md:text-base">{user?.username}</p>
             <p className="text-xs md:text-sm text-primary-100 truncate">{user?.email}</p>
@@ -104,6 +110,14 @@ const Sidebar = ({ chats, selectedChat, onSelectChat, onNewChat, onCreateGroup }
         <UserSearch
           onClose={() => setShowSearch(false)}
           onSelectUser={onNewChat}
+        />
+      )}
+
+      {/* Profile Modal */}
+      {showProfile && (
+        <ProfileModal
+          isOpen={showProfile}
+          onClose={() => setShowProfile(false)}
         />
       )}
 

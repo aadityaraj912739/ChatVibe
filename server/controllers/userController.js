@@ -1,4 +1,5 @@
 const User = require('../models/User');
+const { cloudinary } = require('../config/cloudinary');
 
 // @desc    Get all users except current user
 // @route   GET /api/users
@@ -89,8 +90,48 @@ const updateUser = async (req, res) => {
   }
 };
 
+// @desc    Upload profile picture
+// @route   POST /api/users/upload-profile
+// @access  Private
+const uploadProfilePicture = async (req, res) => {
+  try {
+    if (!req.file) {
+      return res.status(400).json({ message: 'No file uploaded' });
+    }
+
+    const user = await User.findById(req.user._id);
+
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    // Delete old avatar from Cloudinary if exists
+    if (user.avatar) {
+      try {
+        const publicId = user.avatar.split('/').slice(-2).join('/').split('.')[0];
+        await cloudinary.uploader.destroy(`chatvibe/profiles/${publicId}`);
+      } catch (error) {
+        console.error('Error deleting old avatar:', error);
+      }
+    }
+
+    // Update user avatar with new Cloudinary URL
+    user.avatar = req.file.path;
+    await user.save();
+
+    res.json({
+      message: 'Profile picture uploaded successfully',
+      avatar: user.avatar
+    });
+  } catch (error) {
+    console.error('Upload profile picture error:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+};
+
 module.exports = {
   getUsers,
   getUserById,
-  updateUser
+  updateUser,
+  uploadProfilePicture
 };
