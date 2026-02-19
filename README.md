@@ -2,6 +2,18 @@
 
 A modern, real-time chat application built with the MERN stack and Socket.IO.
 
+## Screenshots 📸
+
+<div align="center">
+  <img src="image/login-page.jpeg" alt="Login Page" width="45%" />
+  <img src="image/register-page.jpeg" alt="Register Page" width="45%" />
+</div>
+
+<div align="center">
+  <img src="image/chat-interface.jpeg" alt="Chat Interface" width="45%" />
+  <img src="image/chat-window.jpeg" alt="Chat Window" width="45%" />
+</div>
+
 ## Features ✨
 
 - 🔐 User authentication (Register/Login) with JWT
