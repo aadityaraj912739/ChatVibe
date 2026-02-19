@@ -19,6 +19,16 @@ module.exports = {
           800: '#075985',
           900: '#0c4a6e',
         }
+      },
+      animation: {
+        fadeIn: 'fadeIn 0.3s ease-in',
+        bounce: 'bounce 1s infinite',
+      },
+      keyframes: {
+        fadeIn: {
+          '0%': { opacity: '0', transform: 'translateY(10px)' },
+          '100%': { opacity: '1', transform: 'translateY(0)' },
+        }
       }
     },
   },

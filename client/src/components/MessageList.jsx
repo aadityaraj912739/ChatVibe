@@ -99,6 +99,16 @@ const MessageList = ({ chatId, messages, setMessages }) => {
     scrollToBottom();
   }, [messages]);
 
+  // Get typing users
+  const typingUsers = getTypingUsers(chatId);
+
+  // Auto-scroll when typing indicator appears
+  useEffect(() => {
+    if (typingUsers.length > 0) {
+      scrollToBottom();
+    }
+  }, [typingUsers]);
+
   const loadMessages = async () => {
     setLoading(true);
     try {
@@ -130,8 +140,6 @@ const MessageList = ({ chatId, messages, setMessages }) => {
       status: isRead ? 'read' : isDelivered ? 'delivered' : 'sent'
     };
   };
-
-  const typingUsers = getTypingUsers(chatId);
 
   if (loading) {
     return (
@@ -213,11 +221,18 @@ const MessageList = ({ chatId, messages, setMessages }) => {
           
           {/* Typing Indicator */}
           {typingUsers.length > 0 && (
-            <div className="flex justify-start">
-              <div className="bg-gray-200 dark:bg-gray-700 px-3 md:px-4 py-2 rounded-2xl">
-                <p className="text-xs md:text-sm text-gray-600 dark:text-gray-300">
-                  {typingUsers.join(', ')} {typingUsers.length === 1 ? 'is' : 'are'} typing...
-                </p>
+            <div className="flex justify-start animate-fadeIn">
+              <div className="bg-gradient-to-r from-blue-100 to-blue-50 dark:from-gray-700 dark:to-gray-600 px-4 md:px-5 py-3 rounded-2xl shadow-sm border border-blue-200 dark:border-gray-600">
+                <div className="flex items-center space-x-2">
+                  <div className="flex space-x-1">
+                    <div className="w-2 h-2 bg-blue-500 rounded-full animate-bounce"></div>
+                    <div className="w-2 h-2 bg-blue-500 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
+                    <div className="w-2 h-2 bg-blue-500 rounded-full animate-bounce" style={{ animationDelay: '0.4s' }}></div>
+                  </div>
+                  <p className="text-sm md:text-base font-medium text-blue-700 dark:text-blue-300">
+                    {typingUsers.join(', ')} {typingUsers.length === 1 ? 'is' : 'are'} typing...
+                  </p>
+                </div>
               </div>
             </div>
           )}
