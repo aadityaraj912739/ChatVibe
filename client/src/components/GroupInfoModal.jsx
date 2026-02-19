@@ -177,11 +177,11 @@ const GroupInfoModal = ({ isOpen, onClose, chat, onChatUpdated }) => {
   };
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-      <div className="bg-white dark:bg-gray-800 rounded-lg shadow-xl w-full max-w-md mx-4 max-h-[90vh] overflow-hidden flex flex-col">
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 px-3 sm:px-4">
+      <div className="bg-white dark:bg-gray-800 rounded-lg shadow-xl w-full max-w-md max-h-[90vh] overflow-hidden flex flex-col">
         {/* Header */}
-        <div className="flex items-center justify-between p-4 border-b dark:border-gray-700">
-          <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
+        <div className="flex items-center justify-between p-3 sm:p-4 border-b dark:border-gray-700">
+          <h2 className="text-lg sm:text-xl font-semibold text-gray-900 dark:text-white">
             {isGroupChat ? 'Group Info' : 'Chat Info'}
           </h2>
           <button
@@ -193,16 +193,16 @@ const GroupInfoModal = ({ isOpen, onClose, chat, onChatUpdated }) => {
         </div>
 
         {/* Content */}
-        <div className="flex-1 overflow-y-auto p-4">
+        <div className="flex-1 overflow-y-auto p-3 sm:p-4">
           {error && (
-            <div className="mb-4 p-3 bg-red-100 dark:bg-red-900 text-red-700 dark:text-red-200 rounded">
+            <div className="mb-3 sm:mb-4 p-2.5 sm:p-3 bg-red-100 dark:bg-red-900 text-red-700 dark:text-red-200 rounded text-sm">
               {error}
             </div>
           )}
 
           {/* Group Name */}
           {isGroupChat && (
-            <div className="mb-6">
+            <div className="mb-4 sm:mb-6">
               {isEditing ? (
                 <div className="flex gap-2">
                   <input
@@ -253,8 +253,8 @@ const GroupInfoModal = ({ isOpen, onClose, chat, onChatUpdated }) => {
 
           {/* Members Section */}
           <div>
-            <div className="flex items-center justify-between mb-3">
-              <h4 className="text-sm font-semibold text-gray-700 dark:text-gray-300">
+            <div className="flex items-center justify-between mb-2 sm:mb-3">
+              <h4 className="text-xs sm:text-sm font-semibold text-gray-700 dark:text-gray-300">
                 Members ({chat.participants?.length || 0})
               </h4>
               {isAdmin && isGroupChat && (

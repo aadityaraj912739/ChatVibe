@@ -166,7 +166,7 @@ const MessageList = ({ chatId, messages, setMessages }) => {
                 key={message._id}
                 className={`flex ${isOwnMessage ? 'justify-end' : 'justify-start'}`}
               >
-                <div className={`flex items-end space-x-2 max-w-[80%] md:max-w-[75%] ${isOwnMessage ? 'flex-row-reverse space-x-reverse' : ''}`}>
+                <div className={`flex items-end space-x-1.5 sm:space-x-2 max-w-[85%] sm:max-w-[80%] md:max-w-[75%] lg:max-w-[70%] ${isOwnMessage ? 'flex-row-reverse space-x-reverse' : ''}`}>
                   {!isOwnMessage && (
                     <Avatar user={message.sender} size="sm" className="flex-shrink-0" />
                   )}
@@ -177,7 +177,7 @@ const MessageList = ({ chatId, messages, setMessages }) => {
                       </p>
                     )}
                     <div
-                      className={`message-bubble inline-block px-3 md:px-4 py-2 rounded-2xl ${
+                      className={`message-bubble inline-block px-2.5 sm:px-3 md:px-4 py-1.5 sm:py-2 rounded-2xl ${
                         isOwnMessage
                           ? 'bg-primary-600 dark:bg-primary-700 text-white rounded-br-none'
                           : 'bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 rounded-bl-none shadow-sm'
@@ -189,7 +189,7 @@ const MessageList = ({ chatId, messages, setMessages }) => {
                           <img 
                             src={message.imageUrl} 
                             alt="Shared content" 
-                            className="rounded-lg max-w-xs max-h-64 object-cover cursor-pointer"
+                            className="rounded-lg w-full max-w-[240px] sm:max-w-xs max-h-48 sm:max-h-64 object-cover cursor-pointer"
                             onClick={() => window.open(message.imageUrl, '_blank')}
                             onError={(e) => {
                               console.error('Image load error:', message.imageUrl);
@@ -200,7 +200,7 @@ const MessageList = ({ chatId, messages, setMessages }) => {
                         </div>
                       )}
                       {message.content && (
-                        <p className="whitespace-pre-wrap text-sm md:text-base" style={{ lineHeight: '1.5rem', wordBreak: 'keep-all', overflowWrap: 'break-word', maxWidth: '500px' }}>{message.content}</p>
+                        <p className="whitespace-pre-wrap text-xs sm:text-sm md:text-base" style={{ lineHeight: '1.4rem', wordBreak: 'keep-all', overflowWrap: 'break-word', maxWidth: '100%' }}>{message.content}</p>
                       )}
                       <div className="flex items-center justify-end space-x-1 mt-1">
                         <span className={`text-xs ${isOwnMessage ? 'text-primary-100' : 'text-gray-500 dark:text-gray-400'}`}>

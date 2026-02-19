@@ -82,11 +82,11 @@ const GroupChatModal = ({ isOpen, onClose, onGroupCreated }) => {
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-      <div className="bg-white dark:bg-gray-800 rounded-lg shadow-xl w-full max-w-md mx-4">
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 px-3 sm:px-4">
+      <div className="bg-white dark:bg-gray-800 rounded-lg shadow-xl w-full max-w-md">
         {/* Header */}
-        <div className="flex items-center justify-between p-4 border-b dark:border-gray-700">
-          <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
+        <div className="flex items-center justify-between p-3 sm:p-4 border-b dark:border-gray-700">
+          <h2 className="text-lg sm:text-xl font-semibold text-gray-900 dark:text-white">
             Create Group Chat
           </h2>
           <button
@@ -98,16 +98,16 @@ const GroupChatModal = ({ isOpen, onClose, onGroupCreated }) => {
         </div>
 
         {/* Form */}
-        <form onSubmit={handleCreateGroup} className="p-4">
+        <form onSubmit={handleCreateGroup} className="p-3 sm:p-4">
           {error && (
-            <div className="mb-4 p-3 bg-red-100 dark:bg-red-900 text-red-700 dark:text-red-200 rounded">
+            <div className="mb-3 sm:mb-4 p-2.5 sm:p-3 bg-red-100 dark:bg-red-900 text-red-700 dark:text-red-200 rounded text-sm">
               {error}
             </div>
           )}
 
           {/* Group Name */}
-          <div className="mb-4">
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+          <div className="mb-3 sm:mb-4">
+            <label className="block text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5 sm:mb-2">
               Group Name
             </label>
             <input
@@ -123,8 +123,8 @@ const GroupChatModal = ({ isOpen, onClose, onGroupCreated }) => {
 
           {/* Selected Users */}
           {selectedUsers.length > 0 && (
-            <div className="mb-4">
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+            <div className="mb-3 sm:mb-4">
+              <label className="block text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5 sm:mb-2">
                 Selected Members ({selectedUsers.length})
               </label>
               <div className="flex flex-wrap gap-2">
@@ -149,8 +149,8 @@ const GroupChatModal = ({ isOpen, onClose, onGroupCreated }) => {
           )}
 
           {/* Search Users */}
-          <div className="mb-4">
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+          <div className="mb-3 sm:mb-4">
+            <label className="block text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5 sm:mb-2">
               Add Members
             </label>
             <div className="relative">
@@ -169,7 +169,7 @@ const GroupChatModal = ({ isOpen, onClose, onGroupCreated }) => {
 
           {/* User List */}
           {searchQuery && (
-            <div className="mb-4 max-h-48 overflow-y-auto border border-gray-300 dark:border-gray-600 rounded-lg">
+            <div className="mb-3 sm:mb-4 max-h-48 overflow-y-auto border border-gray-300 dark:border-gray-600 rounded-lg">
               {users.length > 0 ? (
                 users.map(user => (
                   <div
@@ -203,20 +203,20 @@ const GroupChatModal = ({ isOpen, onClose, onGroupCreated }) => {
           )}
 
           {/* Actions */}
-          <div className="flex gap-3">
+          <div className="flex gap-2 sm:gap-3">
             <button
               type="button"
               onClick={handleClose}
-              className="flex-1 px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg
-                       text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700"
+              className="flex-1 px-3 sm:px-4 py-2 sm:py-2.5 border border-gray-300 dark:border-gray-600 rounded-lg
+                       text-xs sm:text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700"
             >
               Cancel
             </button>
             <button
               type="submit"
               disabled={loading || !groupName || selectedUsers.length < 2}
-              className="flex-1 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700
-                       disabled:opacity-50 disabled:cursor-not-allowed"
+              className="flex-1 px-3 sm:px-4 py-2 sm:py-2.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700
+                       text-xs sm:text-sm disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {loading ? 'Creating...' : 'Create Group'}
             </button>

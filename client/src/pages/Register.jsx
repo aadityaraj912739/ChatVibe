@@ -56,33 +56,33 @@ const Register = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-primary-500 to-primary-700 dark:from-gray-900 dark:to-gray-800 flex items-center justify-center px-4 py-8">
-      <div className="max-w-md w-full space-y-6 md:space-y-8 bg-white dark:bg-gray-800 p-6 md:p-8 rounded-2xl shadow-2xl relative">
+    <div className="min-h-screen bg-gradient-to-br from-primary-500 to-primary-700 dark:from-gray-900 dark:to-gray-800 flex items-center justify-center px-3 sm:px-4 py-6 sm:py-8">
+      <div className="max-w-md w-full space-y-4 sm:space-y-6 md:space-y-8 bg-white dark:bg-gray-800 p-4 sm:p-6 md:p-8 rounded-2xl shadow-2xl relative">
         <button
           onClick={toggleTheme}
-          className="absolute top-3 right-3 md:top-4 md:right-4 p-2 rounded-lg bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors"
+          className="absolute top-2 right-2 sm:top-3 sm:right-3 md:top-4 md:right-4 p-1.5 sm:p-2 rounded-lg bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors"
           title={isDarkMode ? 'Light Mode' : 'Dark Mode'}
         >
           {isDarkMode ? (
-            <SunIcon className="h-5 w-5 text-gray-700 dark:text-gray-300" />
+            <SunIcon className="h-4 w-4 sm:h-5 sm:w-5 text-gray-700 dark:text-gray-300" />
           ) : (
-            <MoonIcon className="h-5 w-5 text-gray-700" />
+            <MoonIcon className="h-4 w-4 sm:h-5 sm:w-5 text-gray-700" />
           )}
         </button>
 
         <div className="text-center">
-          <h2 className="text-3xl md:text-4xl font-extrabold text-gray-900 dark:text-gray-100">ChatVibe</h2>
-          <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">Create your account</p>
+          <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-gray-900 dark:text-gray-100">ChatVibe</h2>
+          <p className="mt-2 text-xs sm:text-sm text-gray-600 dark:text-gray-400">Create your account</p>
         </div>
         
-        <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
+        <form className="mt-6 sm:mt-8 space-y-4 sm:space-y-6" onSubmit={handleSubmit}>
           {error && (
-            <div className="bg-red-50 dark:bg-red-900/30 border border-red-400 dark:border-red-600 text-red-700 dark:text-red-400 px-4 py-3 rounded relative">
+            <div className="bg-red-50 dark:bg-red-900/30 border border-red-400 dark:border-red-600 text-red-700 dark:text-red-400 px-3 sm:px-4 py-2 sm:py-3 rounded relative text-sm">
               {error}
             </div>
           )}
           
-          <div className="space-y-4">
+          <div className="space-y-3 sm:space-y-4">
             <div>
               <label htmlFor="username" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
                 Username
@@ -151,12 +151,12 @@ const Register = () => {
           <button
             type="submit"
             disabled={loading}
-            className="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-primary-600 dark:bg-primary-700 hover:bg-primary-700 dark:hover:bg-primary-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+            className="w-full flex justify-center py-2.5 sm:py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm sm:text-base font-medium text-white bg-primary-600 dark:bg-primary-700 hover:bg-primary-700 dark:hover:bg-primary-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
           >
             {loading ? 'Creating account...' : 'Sign up'}
           </button>
 
-          <div className="text-center text-sm">
+          <div className="text-center text-xs sm:text-sm">
             <span className="text-gray-600 dark:text-gray-400">Already have an account? </span>
             <Link to="/login" className="font-medium text-primary-600 dark:text-primary-400 hover:text-primary-500 dark:hover:text-primary-300">
               Sign in

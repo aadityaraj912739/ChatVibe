@@ -54,11 +54,11 @@ const ProfileModal = ({ isOpen, onClose }) => {
   };
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-      <div className="bg-white dark:bg-gray-800 rounded-lg shadow-xl w-full max-w-md">
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-3 sm:p-4">
+      <div className="bg-white dark:bg-gray-800 rounded-lg shadow-xl w-full max-w-md mx-2 sm:mx-0">
         {/* Header */}
-        <div className="flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-700">
-          <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100">
+        <div className="flex items-center justify-between p-3 sm:p-4 border-b border-gray-200 dark:border-gray-700">
+          <h2 className="text-lg sm:text-xl font-semibold text-gray-900 dark:text-gray-100">
             Profile Settings
           </h2>
           <button
@@ -70,7 +70,7 @@ const ProfileModal = ({ isOpen, onClose }) => {
         </div>
 
         {/* Body */}
-        <div className="p-6">
+        <div className="p-4 sm:p-6">
           <div className="flex flex-col items-center space-y-4">
             {/* Current Avatar */}
             <div className="relative">

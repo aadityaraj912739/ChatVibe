@@ -361,15 +361,15 @@ const Chat = () => {
   if (loading) {
     return (
       <div className="h-screen flex items-center justify-center bg-gray-100 dark:bg-gray-900">
-        <div className="text-xl text-gray-600 dark:text-gray-400">Loading...</div>
+        <div className="text-base sm:text-lg md:text-xl text-gray-600 dark:text-gray-400">Loading...</div>
       </div>
     );
   }
 
   return (
     <div className="h-screen flex overflow-hidden bg-gray-100 dark:bg-gray-900">
-      {/* Sidebar - Hidden on mobile when chat is selected */}
-      <div className={`${showSidebar ? 'flex' : 'hidden'} md:flex w-full md:w-80 lg:w-96`}>
+      {/* Sidebar - Hidden on mobile when chat is selected, shown on tablet and desktop */}
+      <div className={`${showSidebar ? 'flex' : 'hidden'} sm:flex w-full sm:w-72 md:w-80 lg:w-96 xl:w-[420px]`}>
         <Suspense fallback={<ComponentLoader />}>
           <Sidebar
             chats={chats}
@@ -384,8 +384,8 @@ const Chat = () => {
         </Suspense>
       </div>
       
-      {/* Chat Window - Hidden on mobile when no chat selected */}
-      <div className={`${!showSidebar ? 'flex' : 'hidden'} md:flex flex-1`}>
+      {/* Chat Window - Hidden on mobile when no chat selected, always shown on tablet and desktop */}
+      <div className={`${!showSidebar ? 'flex' : 'hidden'} sm:flex flex-1`}>
         <Suspense fallback={<ComponentLoader />}>
           <ChatWindow
             chat={selectedChat}

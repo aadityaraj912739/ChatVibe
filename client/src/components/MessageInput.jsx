@@ -170,13 +170,13 @@ const MessageInput = ({ chatId, onMessageSent }) => {
   };
 
   return (
-    <div className="p-3 md:p-4 border-t border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800">
+    <div className="p-2 sm:p-3 md:p-4 border-t border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800">
       {imagePreview && (
-        <div className="mb-3 relative inline-block">
+        <div className="mb-2 sm:mb-3 relative inline-block">
           <img 
             src={imagePreview} 
             alt="Preview" 
-            className="max-h-32 rounded-lg border border-gray-300 dark:border-gray-600"
+            className="max-h-24 sm:max-h-32 rounded-lg border border-gray-300 dark:border-gray-600"
           />
           <button
             type="button"
@@ -187,7 +187,7 @@ const MessageInput = ({ chatId, onMessageSent }) => {
           </button>
         </div>
       )}
-      <form onSubmit={handleSubmit} className="flex items-end space-x-2">
+      <form onSubmit={handleSubmit} className="flex items-end space-x-1.5 sm:space-x-2">
         <input
           ref={fileInputRef}
           type="file"
@@ -198,7 +198,7 @@ const MessageInput = ({ chatId, onMessageSent }) => {
         <button
           type="button"
           onClick={() => fileInputRef.current?.click()}
-          className="p-2.5 md:p-3 bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-full hover:bg-gray-300 dark:hover:bg-gray-600 transition-all duration-150 flex-shrink-0"
+          className="p-2 sm:p-2.5 md:p-3 bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-full hover:bg-gray-300 dark:hover:bg-gray-600 transition-all duration-150 flex-shrink-0"
           title="Attach image"
         >
           <PhotoIcon className="h-5 w-5 md:h-6 md:w-6" />
@@ -210,13 +210,13 @@ const MessageInput = ({ chatId, onMessageSent }) => {
           onKeyDown={handleKeyDown}
           placeholder={selectedImage ? "Add a caption (optional)..." : "Type a message..."}
           rows={1}
-          className="flex-1 px-3 md:px-4 py-2 text-sm md:text-base border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 rounded-2xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent resize-none overflow-y-auto transition-all duration-150"
-          style={{ minHeight: '44px', maxHeight: '128px', whiteSpace: 'pre-wrap', lineHeight: '1.5rem', wordBreak: 'keep-all', overflowWrap: 'break-word' }}
+          className="flex-1 px-2.5 sm:px-3 md:px-4 py-2 text-sm sm:text-base border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 rounded-2xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent resize-none overflow-y-auto transition-all duration-150"
+          style={{ minHeight: '40px', maxHeight: '120px', whiteSpace: 'pre-wrap', lineHeight: '1.5rem', wordBreak: 'keep-all', overflowWrap: 'break-word' }}
         />
         <button
           type="submit"
           disabled={(message.trim() === '' && !selectedImage) || uploading}
-          className="p-2.5 md:p-3 bg-primary-600 dark:bg-primary-700 text-white rounded-full hover:bg-primary-700 dark:hover:bg-primary-800 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-150 flex-shrink-0 shadow-sm hover:shadow-md disabled:hover:shadow-sm"
+          className="p-2 sm:p-2.5 md:p-3 bg-primary-600 dark:bg-primary-700 text-white rounded-full hover:bg-primary-700 dark:hover:bg-primary-800 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-150 flex-shrink-0 shadow-sm hover:shadow-md disabled:hover:shadow-sm"
           title={uploading ? 'Uploading...' : selectedImage ? 'Send image' : message.trim() === '' ? 'Type a message to send' : 'Send message (Enter)'}
         >
           {uploading ? (
@@ -226,7 +226,7 @@ const MessageInput = ({ chatId, onMessageSent }) => {
           )}
         </button>
       </form>
-      <p className="text-xs text-gray-400 dark:text-gray-500 mt-1.5 ml-1">
+      <p className="hidden sm:block text-xs text-gray-400 dark:text-gray-500 mt-1.5 ml-1">
         Press <kbd className="px-1.5 py-0.5 bg-gray-200 dark:bg-gray-700 rounded text-xs">Enter</kbd> to send, 
         <kbd className="px-1.5 py-0.5 bg-gray-200 dark:bg-gray-700 rounded text-xs ml-1">Shift + Enter</kbd> for new line
       </p>

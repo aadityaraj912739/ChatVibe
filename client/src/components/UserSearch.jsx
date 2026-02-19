@@ -46,11 +46,11 @@ const UserSearch = ({ onClose, onSelectUser }) => {
   };
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 dark:bg-opacity-70 flex items-center justify-center z-50 p-4">
-      <div className="bg-white dark:bg-gray-800 rounded-lg w-full max-w-md max-h-[80vh] flex flex-col">
+    <div className="fixed inset-0 bg-black bg-opacity-50 dark:bg-opacity-70 flex items-center justify-center z-50 p-3 sm:p-4">
+      <div className="bg-white dark:bg-gray-800 rounded-lg w-full max-w-md max-h-[85vh] sm:max-h-[80vh] flex flex-col mx-2 sm:mx-0">
         {/* Header */}
-        <div className="p-4 border-b border-gray-200 dark:border-gray-700 flex items-center justify-between">
-          <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100">Search Users</h2>
+        <div className="p-3 sm:p-4 border-b border-gray-200 dark:border-gray-700 flex items-center justify-between">
+          <h2 className="text-lg sm:text-xl font-bold text-gray-900 dark:text-gray-100">Search Users</h2>
           <button
             onClick={onClose}
             className="p-1 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
@@ -60,7 +60,7 @@ const UserSearch = ({ onClose, onSelectUser }) => {
         </div>
 
         {/* Search Input */}
-        <div className="p-4 border-b border-gray-200 dark:border-gray-700">
+        <div className="p-3 sm:p-4 border-b border-gray-200 dark:border-gray-700">
           <div className="relative">
             <MagnifyingGlassIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
             <input
@@ -75,7 +75,7 @@ const UserSearch = ({ onClose, onSelectUser }) => {
         </div>
 
         {/* Results */}
-        <div className="flex-1 overflow-y-auto p-4">
+        <div className="flex-1 overflow-y-auto p-3 sm:p-4">
           {loading ? (
             <div className="text-center text-gray-500 dark:text-gray-400 py-8">
               Searching...
