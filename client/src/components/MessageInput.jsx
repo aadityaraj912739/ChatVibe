@@ -118,7 +118,7 @@ const MessageInput = ({ chatId, onMessageSent }) => {
       formData.append('chatId', chatId);
       formData.append('caption', message.trim());
 
-      await messageAPI.sendImageMessage(formData);
+      const response = await messageAPI.sendImageMessage(formData);
       
       // Clear inputs
       setMessage('');
@@ -132,7 +132,8 @@ const MessageInput = ({ chatId, onMessageSent }) => {
       // Play notification sound
       playNotificationSound();
       
-      if (onMessageSent) onMessageSent();
+      // Note: Don't call onMessageSent here - image message will come through socket
+      // This prevents adding undefined to messages array and causing blank screen
     } catch (error) {
       console.error('Image upload error:', error);
       alert('Failed to upload image. Please try again.');

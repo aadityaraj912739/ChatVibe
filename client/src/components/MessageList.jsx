@@ -183,6 +183,11 @@ const MessageList = ({ chatId, messages, setMessages }) => {
                             alt="Shared content" 
                             className="rounded-lg max-w-xs max-h-64 object-cover cursor-pointer"
                             onClick={() => window.open(message.imageUrl, '_blank')}
+                            onError={(e) => {
+                              console.error('Image load error:', message.imageUrl);
+                              e.target.style.display = 'none';
+                            }}
+                            loading="lazy"
                           />
                         </div>
                       )}

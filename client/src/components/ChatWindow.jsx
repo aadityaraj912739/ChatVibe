@@ -132,7 +132,10 @@ const ChatWindow = ({ chat, onChatUpdate, onShowGroupInfo, onBack }) => {
       <MessageInput
         chatId={chat._id}
         onMessageSent={(message) => {
-          setMessages(prev => [...prev, message]);
+          // Only add message if it's valid (prevents undefined from causing issues)
+          if (message && message._id) {
+            setMessages(prev => [...prev, message]);
+          }
         }}
       />
     </div>

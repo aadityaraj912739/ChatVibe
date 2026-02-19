@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import { AuthProvider } from './context/AuthContext';
 import { SocketProvider } from './context/SocketContext';
 import { ThemeProvider } from './context/ThemeContext';
+import ErrorBoundary from './components/ErrorBoundary';
 
 // Lazy load components for better initial load performance
 const PrivateRoute = lazy(() => import('./components/PrivateRoute'));
@@ -22,30 +23,32 @@ const LoadingFallback = () => (
 
 function App() {
   return (
-    <ThemeProvider>
-      <AuthProvider>
-        <SocketProvider>
-          <Router future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
-            <Suspense fallback={<LoadingFallback />}>
-              <Routes>
-                <Route path="/login" element={<Login />} />
-                <Route path="/register" element={<Register />} />
-                <Route
-                  path="/chat"
-                  element={
-                    <PrivateRoute>
-                      <Chat />
-                    </PrivateRoute>
-                  }
-                />
-                <Route path="/" element={<Navigate to="/chat" />} />
-                <Route path="*" element={<Navigate to="/chat" />} />
-              </Routes>
-            </Suspense>
-          </Router>
-        </SocketProvider>
-      </AuthProvider>
-    </ThemeProvider>
+    <ErrorBoundary>
+      <ThemeProvider>
+        <AuthProvider>
+          <SocketProvider>
+            <Router future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+              <Suspense fallback={<LoadingFallback />}>
+                <Routes>
+                  <Route path="/login" element={<Login />} />
+                  <Route path="/register" element={<Register />} />
+                  <Route
+                    path="/chat"
+                    element={
+                      <PrivateRoute>
+                        <Chat />
+                      </PrivateRoute>
+                    }
+                  />
+                  <Route path="/" element={<Navigate to="/chat" />} />
+                  <Route path="*" element={<Navigate to="/chat" />} />
+                </Routes>
+              </Suspense>
+            </Router>
+          </SocketProvider>
+        </AuthProvider>
+      </ThemeProvider>
+    </ErrorBoundary>
   );
 }
 
