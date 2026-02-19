@@ -1,11 +1,20 @@
-import React, { useState, useEffect, useRef } from 'react';
-import Sidebar from '../components/Sidebar';
-import ChatWindow from '../components/ChatWindow';
-import GroupChatModal from '../components/GroupChatModal';
-import GroupInfoModal from '../components/GroupInfoModal';
+import React, { useState, useEffect, useRef, lazy, Suspense } from 'react';
 import { chatAPI } from '../services/api';
 import { useSocket } from '../context/SocketContext';
 import { useAuth } from '../context/AuthContext';
+
+// Lazy load heavy components
+const Sidebar = lazy(() => import('../components/Sidebar'));
+const ChatWindow = lazy(() => import('../components/ChatWindow'));
+const GroupChatModal = lazy(() => import('../components/GroupChatModal'));
+const GroupInfoModal = lazy(() => import('../components/GroupInfoModal'));
+
+// Loading component for lazy-loaded components
+const ComponentLoader = () => (
+  <div className="flex items-center justify-center h-full">
+    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary-600"></div>
+  </div>
+);
 
 const Chat = () => {
   const [chats, setChats] = useState([]);
@@ -361,42 +370,54 @@ const Chat = () => {
     <div className="h-screen flex overflow-hidden bg-gray-100 dark:bg-gray-900">
       {/* Sidebar - Hidden on mobile when chat is selected */}
       <div className={`${showSidebar ? 'flex' : 'hidden'} md:flex w-full md:w-80 lg:w-96`}>
-        <Sidebar
-          chats={chats}
-          selectedChat={selectedChat}
-          onSelectChat={(chat) => {
-            handleSelectChat(chat);
-            setShowSidebar(false); // Hide sidebar on mobile when chat selected
-          }}
-          onNewChat={handleNewChat}
-          onCreateGroup={() => setShowGroupModal(true)}
-        />
+        <Suspense fallback={<ComponentLoader />}>
+          <Sidebar
+            chats={chats}
+            selectedChat={selectedChat}
+            onSelectChat={(chat) => {
+              handleSelectChat(chat);
+              setShowSidebar(false); // Hide sidebar on mobile when chat selected
+            }}
+            onNewChat={handleNewChat}
+            onCreateGroup={() => setShowGroupModal(true)}
+          />
+        </Suspense>
       </div>
       
       {/* Chat Window - Hidden on mobile when no chat selected */}
       <div className={`${!showSidebar ? 'flex' : 'hidden'} md:flex flex-1`}>
-        <ChatWindow
-          chat={selectedChat}
-          onChatUpdate={handleChatUpdate}
-          onShowGroupInfo={() => setShowGroupInfo(true)}
-          onBack={() => setShowSidebar(true)} // Show sidebar when back button clicked
-        />
+        <Suspense fallback={<ComponentLoader />}>
+          <ChatWindow
+            chat={selectedChat}
+            onChatUpdate={handleChatUpdate}
+            onShowGroupInfo={() => setShowGroupInfo(true)}
+            onBack={() => setShowSidebar(true)} // Show sidebar when back button clicked
+          />
+        </Suspense>
       </div>
       
       {/* Group Chat Creation Modal */}
-      <GroupChatModal
-        isOpen={showGroupModal}
-        onClose={() => setShowGroupModal(false)}
-        onGroupCreated={handleGroupCreated}
-      />
+      {showGroupModal && (
+        <Suspense fallback={<ComponentLoader />}>
+          <GroupChatModal
+            isOpen={showGroupModal}
+            onClose={() => setShowGroupModal(false)}
+            onGroupCreated={handleGroupCreated}
+          />
+        </Suspense>
+      )}
       
       {/* Group Info Modal */}
-      <GroupInfoModal
-        isOpen={showGroupInfo}
-        onClose={() => setShowGroupInfo(false)}
-        chat={selectedChat}
-        onChatUpdated={handleChatUpdated}
-      />
+      {showGroupInfo && (
+        <Suspense fallback={<ComponentLoader />}>
+          <GroupInfoModal
+            isOpen={showGroupInfo}
+            onClose={() => setShowGroupInfo(false)}
+            chat={selectedChat}
+            onChatUpdated={handleChatUpdated}
+          />
+        </Suspense>
+      )}
     </div>
   );
 };
