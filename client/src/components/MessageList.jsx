@@ -125,7 +125,7 @@ const MessageList = ({ chatId, messages, setMessages }) => {
   };
 
   const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth', block: 'end' });
   };
 
   const getMessageStatus = (message) => {
@@ -150,7 +150,7 @@ const MessageList = ({ chatId, messages, setMessages }) => {
   }
 
   return (
-    <div className="flex-1 overflow-y-auto p-3 md:p-4 space-y-3 md:space-y-4 bg-gray-50 dark:bg-gray-900">
+    <div className="flex-1 overflow-y-auto p-3 md:p-4 space-y-3 md:space-y-4 bg-gray-50 dark:bg-gray-900 pb-20">
       {messages.length === 0 ? (
         <div className="flex items-center justify-center h-full">
           <p className="text-sm md:text-base text-gray-500 dark:text-gray-400 px-4 text-center">No messages yet. Start the conversation!</p>
@@ -219,9 +219,9 @@ const MessageList = ({ chatId, messages, setMessages }) => {
             );
           })}
           
-          {/* Typing Indicator */}
+          {/* Typing Indicator - Fixed position at bottom */}
           {typingUsers.length > 0 && (
-            <div className="flex justify-start animate-fadeIn">
+            <div className="flex justify-start animate-fadeIn mb-4">
               <div className="bg-gradient-to-r from-blue-100 to-blue-50 dark:from-gray-700 dark:to-gray-600 px-4 md:px-5 py-3 rounded-2xl shadow-sm border border-blue-200 dark:border-gray-600">
                 <div className="flex items-center space-x-2">
                   <div className="flex space-x-1">
@@ -236,9 +236,26 @@ const MessageList = ({ chatId, messages, setMessages }) => {
               </div>
             </div>
           )}
+          <div ref={messagesEndRef} />
         </>
       )}
-      <div ref={messagesEndRef} />
+      {/* Empty state typing indicator for better visibility */}
+      {messages.length === 0 && typingUsers.length > 0 && (
+        <div className="flex justify-start animate-fadeIn">
+          <div className="bg-gradient-to-r from-blue-100 to-blue-50 dark:from-gray-700 dark:to-gray-600 px-4 md:px-5 py-3 rounded-2xl shadow-sm border border-blue-200 dark:border-gray-600">
+            <div className="flex items-center space-x-2">
+              <div className="flex space-x-1">
+                <div className="w-2 h-2 bg-blue-500 rounded-full animate-bounce"></div>
+                <div className="w-2 h-2 bg-blue-500 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
+                <div className="w-2 h-2 bg-blue-500 rounded-full animate-bounce" style={{ animationDelay: '0.4s' }}></div>
+              </div>
+              <p className="text-sm md:text-base font-medium text-blue-700 dark:text-blue-300">
+                {typingUsers.join(', ')} {typingUsers.length === 1 ? 'is' : 'are'} typing...
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
