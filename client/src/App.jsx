@@ -4,22 +4,13 @@ import { AuthProvider } from './context/AuthContext';
 import { SocketProvider } from './context/SocketContext';
 import { ThemeProvider } from './context/ThemeContext';
 import ErrorBoundary from './components/ErrorBoundary';
+import CircularLoader from './components/CircularLoader';
 
 // Lazy load components for better initial load performance
 const PrivateRoute = lazy(() => import('./components/PrivateRoute'));
 const Login = lazy(() => import('./pages/Login'));
 const Register = lazy(() => import('./pages/Register'));
 const Chat = lazy(() => import('./pages/Chat'));
-
-// Loading component
-const LoadingFallback = () => (
-  <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900">
-    <div className="text-center">
-      <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600"></div>
-      <p className="mt-4 text-gray-600 dark:text-gray-400">Loading...</p>
-    </div>
-  </div>
-);
 
 function App() {
   return (
@@ -28,7 +19,7 @@ function App() {
         <AuthProvider>
           <SocketProvider>
             <Router future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
-              <Suspense fallback={<LoadingFallback />}>
+              <Suspense fallback={<CircularLoader message="Loading ChatVibe..." />}>
                 <Routes>
                   <Route path="/login" element={<Login />} />
                   <Route path="/register" element={<Register />} />

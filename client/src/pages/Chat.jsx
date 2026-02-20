@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef, lazy, Suspense } from 'react';
 import { chatAPI } from '../services/api';
 import { useSocket } from '../context/SocketContext';
 import { useAuth } from '../context/AuthContext';
+import CircularLoader from '../components/CircularLoader';
 
 // Lazy load heavy components
 const Sidebar = lazy(() => import('../components/Sidebar'));
@@ -359,11 +360,7 @@ const Chat = () => {
   };
 
   if (loading) {
-    return (
-      <div className="h-screen flex items-center justify-center bg-gray-100 dark:bg-gray-900">
-        <div className="text-base sm:text-lg md:text-xl text-gray-600 dark:text-gray-400">Loading...</div>
-      </div>
-    );
+    return <CircularLoader message="Loading your chats..." />;
   }
 
   return (
