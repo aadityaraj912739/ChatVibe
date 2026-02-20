@@ -116,11 +116,31 @@ const Chat = () => {
   }, [socket, chats]);
 
   const loadChats = async () => {
+    const startTime = Date.now();
+    const minLoadingTime = 1500; // Minimum 1.5 seconds to show the loader
+    
     try {
       const response = await chatAPI.getChats();
+      
+      // Calculate remaining time to meet minimum loading time
+      const elapsedTime = Date.now() - startTime;
+      const remainingTime = Math.max(0, minLoadingTime - elapsedTime);
+      
+      // Wait for remaining time if needed
+      if (remainingTime > 0) {
+        await new Promise(resolve => setTimeout(resolve, remainingTime));
+      }
+      
       setChats(response.data);
     } catch (error) {
       console.error('Error loading chats:', error);
+      
+      // Still respect minimum loading time even on error
+      const elapsedTime = Date.now() - startTime;
+      const remainingTime = Math.max(0, minLoadingTime - elapsedTime);
+      if (remainingTime > 0) {
+        await new Promise(resolve => setTimeout(resolve, remainingTime));
+      }
     } finally {
       setLoading(false);
     }

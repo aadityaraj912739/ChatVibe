@@ -4,17 +4,17 @@ const CircularLoader = ({ message = 'Loading...' }) => {
   const [progress, setProgress] = useState(0);
 
   useEffect(() => {
-    // Simulate loading progress
+    // Simulate loading progress with smooth progression to 100%
     const interval = setInterval(() => {
       setProgress((prevProgress) => {
-        if (prevProgress >= 95) {
-          return 95; // Stop at 95% until actual loading completes
+        if (prevProgress >= 100) {
+          return 100;
         }
-        // Increment progress
-        const increment = Math.random() * 15 + 5;
-        return Math.min(prevProgress + increment, 95);
+        // Faster increment to ensure reaching 100%
+        const increment = prevProgress < 70 ? Math.random() * 20 + 10 : Math.random() * 10 + 5;
+        return Math.min(prevProgress + increment, 100);
       });
-    }, 200);
+    }, 150);
 
     return () => clearInterval(interval);
   }, []);
@@ -71,7 +71,7 @@ const CircularLoader = ({ message = 'Loading...' }) => {
               strokeDasharray={circumference}
               strokeDashoffset={strokeDashoffset}
               strokeLinecap="round"
-              className="transition-all duration-200 ease-out"
+              className="transition-all duration-150 ease-out"
             />
           </svg>
           
