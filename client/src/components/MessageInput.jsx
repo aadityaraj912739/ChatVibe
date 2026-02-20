@@ -118,7 +118,7 @@ const MessageInput = ({ chatId, onMessageSent }) => {
       formData.append('chatId', chatId);
       formData.append('caption', message.trim());
 
-      const response = await messageAPI.sendImageMessage(formData);
+      await messageAPI.sendImageMessage(formData);
       
       // Clear inputs
       setMessage('');
