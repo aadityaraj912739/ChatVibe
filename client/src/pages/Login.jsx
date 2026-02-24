@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, memo } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useTheme } from '../context/ThemeContext';
 import { SunIcon, MoonIcon, ChatBubbleLeftRightIcon, LockClosedIcon } from '@heroicons/react/24/outline';
 
-const Login = () => {
+const Login = memo(() => {
   const navigate = useNavigate();
   const { login } = useAuth();
   const { isDarkMode, toggleTheme } = useTheme();
@@ -134,6 +134,8 @@ const Login = () => {
       </div>
     </div>
   );
-};
+});
+
+Login.displayName = 'Login';
 
 export default Login;

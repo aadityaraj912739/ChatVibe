@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { memo } from 'react';
 
-const CircularLoader = ({ message = 'Loading...' }) => {
+const CircularLoader = memo(({ message = 'Loading...' }) => {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-primary-500 to-primary-700 dark:from-gray-900 dark:to-gray-800">
       <div className="text-center">
@@ -38,6 +38,8 @@ const CircularLoader = ({ message = 'Loading...' }) => {
       </div>
     </div>
   );
-};
+});
+
+CircularLoader.displayName = 'CircularLoader';
 
 export default CircularLoader;

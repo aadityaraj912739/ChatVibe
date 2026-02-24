@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useEffect, useState } from 'react';
+import React, { createContext, useContext, useEffect, useState, useMemo } from 'react';
 
 const ThemeContext = createContext(null);
 
@@ -36,10 +36,11 @@ export const ThemeProvider = ({ children }) => {
     setIsDarkMode(prev => !prev);
   };
 
-  const value = {
+  // Memoize context value to prevent unnecessary re-renders
+  const value = useMemo(() => ({
     isDarkMode,
     toggleTheme
-  };
+  }), [isDarkMode]);
 
   return (
     <ThemeContext.Provider value={value}>

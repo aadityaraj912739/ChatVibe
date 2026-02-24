@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useState, useEffect, useMemo, useCallback } from 'react';
 import { authAPI } from '../services/api';
 
 const AuthContext = createContext(null);
@@ -100,12 +100,13 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  const updateUser = (updatedUser) => {
+  const updateUser = useCallback((updatedUser) => {
     setUser(updatedUser);
     localStorage.setItem('user', JSON.stringify(updatedUser));
-  };
+  }, []);
 
-  const value = {
+  // Memoize context value to prevent unnecessary re-renders
+  const value = useMemo(() => ({
     user,
     token,
     login,
@@ -114,7 +115,7 @@ export const AuthProvider = ({ children }) => {
     updateUser,
     isAuthenticated: !!user,
     loading: false // Always false since we load synchronously from localStorage
-  };
+  }), [user, token, login, register, logout, updateUser]);
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };

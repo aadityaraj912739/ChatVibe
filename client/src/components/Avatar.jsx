@@ -1,7 +1,7 @@
-import React from 'react';
+import React, { memo } from 'react';
 import { getAvatarColor, getInitials, isValidImageUrl } from '../utils/avatarUtils';
 
-const Avatar = ({ 
+const Avatar = memo(({ 
   user, 
   size = 'md', 
   className = '', 
@@ -67,6 +67,8 @@ const Avatar = ({
       )}
     </div>
   );
-};
+});
+
+Avatar.displayName = 'Avatar';
 
 export default Avatar;

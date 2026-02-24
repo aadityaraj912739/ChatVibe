@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, memo } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useTheme } from '../context/ThemeContext';
 import { SunIcon, MoonIcon, ChatBubbleLeftRightIcon, UserPlusIcon } from '@heroicons/react/24/outline';
 
-const Register = () => {
+const Register = memo(() => {
   const navigate = useNavigate();
   const { register } = useAuth();
   const { isDarkMode, toggleTheme } = useTheme();
@@ -182,6 +182,8 @@ const Register = () => {
       </div>
     </div>
   );
-};
+});
+
+Register.displayName = 'Register';
 
 export default Register;

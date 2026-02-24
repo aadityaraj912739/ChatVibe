@@ -43,6 +43,15 @@ const io = socketIO(server, {
 
 // Middleware
 app.use(compression()); // Enable gzip compression for faster loading
+
+// Add aggressive caching headers for static assets
+app.use((req, res, next) => {
+  if (req.url.match(/\.(jpg|jpeg|png|gif|ico|css|js|svg|woff|woff2|ttf|eot)$/)) {
+    res.setHeader('Cache-Control', 'public, max-age=31536000, immutable');
+  }
+  next();
+});
+
 app.use(cors({
   origin: (origin, callback) => {
     if (!origin || allowedOrigins.some(allowed => origin.includes('vercel.app')) || allowedOrigins.includes(origin)) {
