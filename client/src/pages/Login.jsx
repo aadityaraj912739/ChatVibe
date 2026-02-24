@@ -1,6 +1,7 @@
 import React, { useState, memo } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { LockClosedIcon } from '@heroicons/react/24/solid';
 
 const Login = memo(() => {
   const navigate = useNavigate();

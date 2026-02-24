@@ -1,6 +1,7 @@
 import React, { useState, memo } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { UserPlusIcon } from '@heroicons/react/24/solid';
 
 const Register = memo(() => {
   const navigate = useNavigate();
