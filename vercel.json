@@ -1,6 +1,20 @@
 {
-  "buildCommand": "cd client && npm install && npm run build",
-  "outputDirectory": "client/build",
+  "version": 2,
+  "builds": [
+    {
+      "src": "client/package.json",
+      "use": "@vercel/static-build",
+      "config": {
+        "distDir": "build"
+      }
+    }
+  ],
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "/client/$1"
+    }
+  ],
   "env": {
     "DISABLE_ESLINT_PLUGIN": "true",
     "CI": "false"
