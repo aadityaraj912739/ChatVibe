@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { useTheme } from '../context/ThemeContext';
-import { MagnifyingGlassIcon, UserPlusIcon, ArrowRightOnRectangleIcon, SunIcon, MoonIcon, UserGroupIcon } from '@heroicons/react/24/outline';
+import { MagnifyingGlassIcon, UserPlusIcon, ArrowRightOnRectangleIcon, SunIcon, MoonIcon, UserGroupIcon, SparklesIcon } from '@heroicons/react/24/outline';
 import ChatList from './ChatList';
 import UserSearch from './UserSearch';
 import Avatar from './Avatar';
@@ -44,21 +44,21 @@ const Sidebar = ({ chats, selectedChat, onSelectChat, onNewChat, onCreateGroup }
           <div className="flex items-center space-x-0.5 sm:space-x-1">
             <button
               onClick={toggleTheme}
-              className="p-1 sm:p-1.5 md:p-2 hover:bg-primary-700 dark:hover:bg-primary-800 rounded-lg transition-colors"
+              className="relative p-1 sm:p-1.5 md:p-2 hover:bg-white/20 rounded-lg transition-all duration-300 hover:scale-110 group"
               title={isDarkMode ? 'Light Mode' : 'Dark Mode'}
             >
               {isDarkMode ? (
-                <SunIcon className="h-4 w-4 sm:h-5 sm:w-5 md:h-6 md:w-6" />
+                <SunIcon className="h-4 w-4 sm:h-5 sm:w-5 md:h-6 md:w-6 text-yellow-300 group-hover:text-yellow-200 group-hover:rotate-90 transition-all duration-300" />
               ) : (
-                <MoonIcon className="h-4 w-4 sm:h-5 sm:w-5 md:h-6 md:w-6" />
+                <MoonIcon className="h-4 w-4 sm:h-5 sm:w-5 md:h-6 md:w-6 text-white group-hover:text-blue-200 group-hover:rotate-12 transition-all duration-300" />
               )}
             </button>
             <button
               onClick={handleLogout}
-              className="p-1 sm:p-1.5 md:p-2 hover:bg-primary-700 dark:hover:bg-primary-800 rounded-lg transition-colors"
+              className="relative p-1 sm:p-1.5 md:p-2 hover:bg-red-500/30 rounded-lg transition-all duration-300 hover:scale-110 group"
               title="Logout"
             >
-              <ArrowRightOnRectangleIcon className="h-4 w-4 sm:h-5 sm:w-5 md:h-6 md:w-6" />
+              <ArrowRightOnRectangleIcon className="h-4 w-4 sm:h-5 sm:w-5 md:h-6 md:w-6 text-white group-hover:translate-x-1 transition-all duration-300" />
             </button>
           </div>
         </div>
@@ -79,29 +79,34 @@ const Sidebar = ({ chats, selectedChat, onSelectChat, onNewChat, onCreateGroup }
       </div>
 
       {/* Search Bar */}
-      <div className="p-2 sm:p-3 md:p-4 border-b border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 flex-shrink-0">
+      <div className="p-2 sm:p-3 md:p-4 border-b border-gray-200 dark:border-gray-700 bg-gradient-to-r from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800 flex-shrink-0">
         <div className="flex space-x-1.5 sm:space-x-2 mb-2">
           <button
             onClick={() => setShowSearch(!showSearch)}
-            className="flex-1 flex items-center space-x-1.5 sm:space-x-2 px-2 sm:px-3 md:px-4 py-2 bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-lg transition-colors text-left"
+            className="flex-1 flex items-center space-x-1.5 sm:space-x-2 px-2 sm:px-3 md:px-4 py-2 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 rounded-xl transition-all duration-300 text-left shadow-sm hover:shadow-md border border-gray-200 dark:border-gray-700 group"
           >
-            <MagnifyingGlassIcon className="h-4 w-4 md:h-5 md:w-5 text-gray-500 dark:text-gray-400 flex-shrink-0" />
+            <div className="relative">
+              <MagnifyingGlassIcon className="h-4 w-4 md:h-5 md:w-5 text-primary-600 dark:text-primary-400 flex-shrink-0 group-hover:scale-110 transition-transform duration-300" />
+              <SparklesIcon className="absolute -top-1 -right-1 h-3 w-3 text-primary-400 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+            </div>
             <span className="text-sm md:text-base text-gray-600 dark:text-gray-300 truncate">Search users...</span>
           </button>
           <button
             onClick={() => setShowSearch(true)}
-            className="p-1.5 sm:p-2 bg-primary-600 dark:bg-primary-700 text-white rounded-lg hover:bg-primary-700 dark:hover:bg-primary-800 transition-colors flex-shrink-0"
+            className="relative p-1.5 sm:p-2 bg-gradient-to-br from-primary-600 to-primary-700 dark:from-primary-700 dark:to-primary-800 text-white rounded-xl hover:from-primary-700 hover:to-primary-800 dark:hover:from-primary-600 dark:hover:to-primary-700 transition-all duration-300 flex-shrink-0 shadow-md hover:shadow-lg hover:scale-105 group overflow-hidden"
             title="New Chat"
           >
-            <UserPlusIcon className="h-5 w-5 md:h-6 md:w-6" />
+            <div className="absolute inset-0 bg-white opacity-0 group-hover:opacity-20 transition-opacity duration-300"></div>
+            <UserPlusIcon className="relative h-5 w-5 md:h-6 md:w-6 group-hover:rotate-12 transition-transform duration-300" />
           </button>
         </div>
         <button
           onClick={onCreateGroup}
-          className="w-full flex items-center justify-center space-x-1.5 sm:space-x-2 px-2 sm:px-3 md:px-4 py-2 bg-green-600 dark:bg-green-700 text-white rounded-lg hover:bg-green-700 dark:hover:bg-green-800 transition-colors text-xs sm:text-sm md:text-base"
+          className="relative w-full flex items-center justify-center space-x-1.5 sm:space-x-2 px-2 sm:px-3 md:px-4 py-2 bg-gradient-to-r from-green-600 to-emerald-600 dark:from-green-700 dark:to-emerald-700 text-white rounded-xl hover:from-green-700 hover:to-emerald-700 dark:hover:from-green-600 dark:hover:to-emerald-600 transition-all duration-300 text-xs sm:text-sm md:text-base shadow-md hover:shadow-lg hover:scale-[1.02] group overflow-hidden"
         >
-          <UserGroupIcon className="h-4 w-4 md:h-5 md:w-5" />
-          <span>Create Group</span>
+          <div className="absolute inset-0 bg-white opacity-0 group-hover:opacity-20 transition-opacity duration-300"></div>
+          <UserGroupIcon className="relative h-4 w-4 md:h-5 md:w-5 group-hover:scale-110 transition-transform duration-300" />
+          <span className="relative">Create Group</span>
         </button>
       </div>
 

@@ -2,7 +2,7 @@ import React, { useState, memo } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useTheme } from '../context/ThemeContext';
-import { SunIcon, MoonIcon, ChatBubbleLeftRightIcon, UserPlusIcon } from '@heroicons/react/24/outline';
+import { SunIcon, MoonIcon } from '@heroicons/react/24/outline';
 
 const Register = memo(() => {
   const navigate = useNavigate();
@@ -73,12 +73,6 @@ const Register = memo(() => {
 
         {/* Logo and Header */}
         <div className="text-center">
-          <div className="flex justify-center mb-3 sm:mb-4">
-            <div className="relative">
-              <div className="absolute inset-0 bg-primary-500 rounded-full blur-xl opacity-50 animate-pulse"></div>
-              <ChatBubbleLeftRightIcon className="relative h-12 w-12 sm:h-14 sm:w-14 md:h-16 md:w-16 text-primary-600 dark:text-primary-400" />
-            </div>
-          </div>
           <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-gray-900 dark:text-gray-100">
             ChatVibe
           </h2>
