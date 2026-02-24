@@ -12,34 +12,42 @@ export const useAuth = () => {
 };
 
 export const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [token, setToken] = useState(localStorage.getItem('token'));
+  // Load user synchronously from localStorage for instant render
+  const storedToken = localStorage.getItem('token');
+  const storedUser = localStorage.getItem('user');
+  
+  const [user, setUser] = useState(() => {
+    // Initialize user state immediately from localStorage
+    try {
+      return storedUser ? JSON.parse(storedUser) : null;
+    } catch {
+      return null;
+    }
+  });
+  const [token, setToken] = useState(storedToken);
 
   useEffect(() => {
-    const loadUser = async () => {
-      const storedToken = localStorage.getItem('token');
-      const storedUser = localStorage.getItem('user');
-      
+    // Verify token in background without blocking render
+    const verifyToken = async () => {
       if (storedToken && storedUser) {
         try {
-          setToken(storedToken);
-          setUser(JSON.parse(storedUser));
-          
-          // Verify token is still valid
+          // Silently verify and update user data in background
           const response = await authAPI.getMe();
           setUser(response.data);
           localStorage.setItem('user', JSON.stringify(response.data));
         } catch (error) {
           console.error('Token validation failed:', error);
-          logout();
+          // Only logout if token is truly invalid (401)
+          if (error.response?.status === 401) {
+            logout();
+          }
         }
       }
-      setLoading(false);
     };
 
-    loadUser();
-  }, []);
+    verifyToken();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []); // Run once on mount
 
   const login = async (credentials) => {
     try {
@@ -105,7 +113,7 @@ export const AuthProvider = ({ children }) => {
     logout,
     updateUser,
     isAuthenticated: !!user,
-    loading
+    loading: false // Always false since we load synchronously from localStorage
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

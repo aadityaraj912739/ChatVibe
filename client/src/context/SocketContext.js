@@ -34,6 +34,7 @@ export const SocketProvider = ({ children }) => {
           if (!prev.includes(data.userId)) {
             return [...prev, data.userId];
           }
+          
           return prev;
         });
       });

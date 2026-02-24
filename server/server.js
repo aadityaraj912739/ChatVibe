@@ -3,6 +3,7 @@ const express = require('express');
 const http = require('http');
 const socketIO = require('socket.io');
 const cors = require('cors');
+const compression = require('compression');
 const connectDB = require('./config/db');
 const socketHandler = require('./socket/socketHandler');
 
@@ -41,6 +42,7 @@ const io = socketIO(server, {
 });
 
 // Middleware
+app.use(compression()); // Enable gzip compression for faster loading
 app.use(cors({
   origin: (origin, callback) => {
     if (!origin || allowedOrigins.some(allowed => origin.includes('vercel.app')) || allowedOrigins.includes(origin)) {

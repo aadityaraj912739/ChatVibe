@@ -5,27 +5,13 @@ import { SocketProvider } from './context/SocketContext';
 import { ThemeProvider } from './context/ThemeContext';
 import ErrorBoundary from './components/ErrorBoundary';
 import CircularLoader from './components/CircularLoader';
+// Import Login and Register directly for instant loading
+import Login from './pages/Login';
+import Register from './pages/Register';
 
-// Helper function to add minimum loading time for better UX
-const lazyWithMinDelay = (importFunc, minDelay = 1000) => {
-  return lazy(() => {
-    const startTime = Date.now();
-    return importFunc().then((module) => {
-      const elapsedTime = Date.now() - startTime;
-      const remainingTime = Math.max(0, minDelay - elapsedTime);
-      
-      return new Promise((resolve) => {
-        setTimeout(() => resolve(module), remainingTime);
-      });
-    });
-  });
-};
-
-// Lazy load components with minimum display time
-const PrivateRoute = lazyWithMinDelay(() => import('./components/PrivateRoute'));
-const Login = lazyWithMinDelay(() => import('./pages/Login'));
-const Register = lazyWithMinDelay(() => import('./pages/Register'));
-const Chat = lazyWithMinDelay(() => import('./pages/Chat'));
+// Only lazy load heavy components (Chat and PrivateRoute)
+const PrivateRoute = lazy(() => import('./components/PrivateRoute'));
+const Chat = lazy(() => import('./pages/Chat'));
 
 function App() {
   return (

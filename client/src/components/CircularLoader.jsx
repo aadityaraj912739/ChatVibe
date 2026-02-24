@@ -1,90 +1,38 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 
 const CircularLoader = ({ message = 'Loading...' }) => {
-  const [progress, setProgress] = useState(0);
-
-  useEffect(() => {
-    // Simulate loading progress with smooth progression to 100%
-    const interval = setInterval(() => {
-      setProgress((prevProgress) => {
-        if (prevProgress >= 100) {
-          return 100;
-        }
-        // Faster increment to ensure reaching 100%
-        const increment = prevProgress < 70 ? Math.random() * 20 + 10 : Math.random() * 10 + 5;
-        return Math.min(prevProgress + increment, 100);
-      });
-    }, 150);
-
-    return () => clearInterval(interval);
-  }, []);
-
-  // Calculate circle properties
-  const radius = 60;
-  const circumference = 2 * Math.PI * radius;
-  const strokeDashoffset = circumference - (progress / 100) * circumference;
-
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-primary-500 to-primary-700 dark:from-gray-900 dark:to-gray-800">
       <div className="text-center">
-        {/* Circular Progress with high-speed spin */}
-        <div className="relative inline-flex items-center justify-center">
-          {/* Spinning background circle */}
+        {/* Simplified spinner for faster rendering */}
+        <div className="inline-block">
           <svg
             className="animate-spin"
-            style={{ animationDuration: '0.6s' }}
-            width="150"
-            height="150"
+            style={{ animationDuration: '0.8s' }}
+            width="64"
+            height="64"
+            viewBox="0 0 64 64"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
           >
             <circle
-              cx="75"
-              cy="75"
-              r={radius}
+              cx="32"
+              cy="32"
+              r="28"
               stroke="rgba(255, 255, 255, 0.2)"
-              strokeWidth="8"
-              fill="none"
-              strokeDasharray="20 10"
+              strokeWidth="6"
             />
-          </svg>
-          
-          {/* Progress circle */}
-          <svg
-            className="absolute top-0 left-0 transform -rotate-90"
-            width="150"
-            height="150"
-          >
-            <circle
-              cx="75"
-              cy="75"
-              r={radius}
-              stroke="rgba(255, 255, 255, 0.1)"
-              strokeWidth="8"
-              fill="none"
-            />
-            <circle
-              cx="75"
-              cy="75"
-              r={radius}
-              stroke="#60A5FA"
-              strokeWidth="8"
-              fill="none"
-              strokeDasharray={circumference}
-              strokeDashoffset={strokeDashoffset}
+            <path
+              d="M32 4C16.536 4 4 16.536 4 32"
+              stroke="white"
+              strokeWidth="6"
               strokeLinecap="round"
-              className="transition-all duration-150 ease-out"
             />
           </svg>
-          
-          {/* Percentage display in center */}
-          <div className="absolute inset-0 flex items-center justify-center">
-            <div className="text-4xl font-bold text-white">
-              {Math.round(progress)}%
-            </div>
-          </div>
         </div>
-
-        {/* Loading message */}
-        <p className="mt-6 text-lg font-medium text-white">
+        
+        {/* Message */}
+        <p className="mt-6 text-white text-lg font-medium tracking-wide">
           {message}
         </p>
       </div>
