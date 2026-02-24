@@ -39,7 +39,11 @@ export const AuthProvider = ({ children }) => {
           console.error('Token validation failed:', error);
           // Only logout if token is truly invalid (401)
           if (error.response?.status === 401) {
-            logout();
+            // Clear auth state
+            localStorage.removeItem('token');
+            localStorage.removeItem('user');
+            setToken(null);
+            setUser(null);
           }
         }
       }
@@ -49,7 +53,7 @@ export const AuthProvider = ({ children }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []); // Run once on mount
 
-  const login = async (credentials) => {
+  const login = useCallback(async (credentials) => {
     try {
       const response = await authAPI.login(credentials);
       const { token, ...userData } = response.data;
@@ -66,9 +70,9 @@ export const AuthProvider = ({ children }) => {
         error: error.response?.data?.message || 'Login failed'
       };
     }
-  };
+  }, []);
 
-  const register = async (userData) => {
+  const register = useCallback(async (userData) => {
     try {
       const response = await authAPI.register(userData);
       const { token, ...user } = response.data;
@@ -85,9 +89,9 @@ export const AuthProvider = ({ children }) => {
         error: error.response?.data?.message || 'Registration failed'
       };
     }
-  };
+  }, []);
 
-  const logout = async () => {
+  const logout = useCallback(async () => {
     try {
       await authAPI.logout();
     } catch (error) {
@@ -98,7 +102,7 @@ export const AuthProvider = ({ children }) => {
       setToken(null);
       setUser(null);
     }
-  };
+  }, []);
 
   const updateUser = useCallback((updatedUser) => {
     setUser(updatedUser);
