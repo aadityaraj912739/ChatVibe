@@ -1,9 +1,6 @@
 {
-  "buildCommand": "npm run build",
-  "outputDirectory": "build",
-  "installCommand": "npm install",
-  "framework": null,
-  "rootDirectory": "client",
+  "buildCommand": "cd client && npm install && npm run build",
+  "outputDirectory": "client/build",
   "env": {
     "DISABLE_ESLINT_PLUGIN": "true",
     "CI": "false"
