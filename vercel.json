@@ -1,7 +1,7 @@
 {
-  "buildCommand": "cd client && npm install && npm run build",
+  "buildCommand": "cd client && npm run build",
   "outputDirectory": "client/build",
-  "installCommand": "npm install --prefix client",
+  "installCommand": "cd client && npm install",
   "framework": null,
   "env": {
     "DISABLE_ESLINT_PLUGIN": "true",
