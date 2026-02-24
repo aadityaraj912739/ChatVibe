@@ -1,13 +1,10 @@
 import React, { useState, memo } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { useTheme } from '../context/ThemeContext';
-import { SunIcon, MoonIcon } from '@heroicons/react/24/outline';
 
 const Login = memo(() => {
   const navigate = useNavigate();
   const { login } = useAuth();
-  const { isDarkMode, toggleTheme } = useTheme();
   const [formData, setFormData] = useState({
     email: '',
     password: ''
@@ -41,20 +38,7 @@ const Login = memo(() => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-primary-500 to-primary-700 dark:from-gray-900 dark:to-gray-800 flex items-center justify-center px-3 sm:px-4 py-6 sm:py-8">
-      <div className="max-w-md w-full space-y-4 sm:space-y-6 md:space-y-8 bg-white dark:bg-gray-800 p-4 sm:p-6 md:p-8 rounded-2xl shadow-2xl relative">
-        {/* Theme Toggle Button */}
-        <button
-          onClick={toggleTheme}
-          className="absolute top-2 right-2 sm:top-3 sm:right-3 md:top-4 md:right-4 p-2 sm:p-2.5 rounded-full bg-gradient-to-r from-primary-100 to-primary-200 dark:from-gray-700 dark:to-gray-600 hover:from-primary-200 hover:to-primary-300 dark:hover:from-gray-600 dark:hover:to-gray-500 transition-all duration-300 shadow-md hover:shadow-lg"
-          title={isDarkMode ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
-        >
-          {isDarkMode ? (
-            <SunIcon className="h-5 w-5 sm:h-6 sm:w-6 text-yellow-500 dark:text-yellow-400" />
-          ) : (
-            <MoonIcon className="h-5 w-5 sm:h-6 sm:w-6 text-primary-700" />
-          )}
-        </button>
-
+      <div className="max-w-md w-full space-y-4 sm:space-y-6 md:space-y-8 bg-white dark:bg-gray-800 p-4 sm:p-6 md:p-8 rounded-2xl shadow-2xl">
         {/* Logo and Header */}
         <div className="text-center">
           <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-gray-900 dark:text-gray-100">

@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { useTheme } from '../context/ThemeContext';
-import { MagnifyingGlassIcon, UserPlusIcon, ArrowRightOnRectangleIcon, SunIcon, MoonIcon, UserGroupIcon, SparklesIcon } from '@heroicons/react/24/outline';
+import { MagnifyingGlassIcon, UserPlusIcon, PowerIcon, UserGroupIcon, SparklesIcon } from '@heroicons/react/24/outline';
+import { SunIcon as SunIconSolid, MoonIcon as MoonIconSolid } from '@heroicons/react/24/solid';
 import ChatList from './ChatList';
 import UserSearch from './UserSearch';
 import Avatar from './Avatar';
@@ -44,21 +45,32 @@ const Sidebar = ({ chats, selectedChat, onSelectChat, onNewChat, onCreateGroup }
           <div className="flex items-center space-x-0.5 sm:space-x-1">
             <button
               onClick={toggleTheme}
-              className="relative p-1 sm:p-1.5 md:p-2 hover:bg-white/20 rounded-lg transition-all duration-300 hover:scale-110 group"
-              title={isDarkMode ? 'Light Mode' : 'Dark Mode'}
+              className="relative p-1.5 sm:p-2 md:p-2.5 rounded-xl transition-all duration-500 hover:scale-110 group overflow-hidden"
+              title={isDarkMode ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
             >
+              <div className="absolute inset-0 bg-gradient-to-br from-yellow-400/20 to-orange-500/20 dark:from-indigo-500/20 dark:to-purple-600/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
               {isDarkMode ? (
-                <SunIcon className="h-4 w-4 sm:h-5 sm:w-5 md:h-6 md:w-6 text-yellow-300 group-hover:text-yellow-200 group-hover:rotate-90 transition-all duration-300" />
+                <div className="relative">
+                  <SunIconSolid className="h-4 w-4 sm:h-5 sm:w-5 md:h-6 md:w-6 text-yellow-400 group-hover:text-yellow-300 group-hover:rotate-180 group-hover:scale-110 transition-all duration-500 drop-shadow-[0_0_8px_rgba(250,204,21,0.6)]" />
+                  <div className="absolute inset-0 bg-yellow-400 rounded-full blur-md opacity-0 group-hover:opacity-50 transition-opacity duration-500"></div>
+                </div>
               ) : (
-                <MoonIcon className="h-4 w-4 sm:h-5 sm:w-5 md:h-6 md:w-6 text-white group-hover:text-blue-200 group-hover:rotate-12 transition-all duration-300" />
+                <div className="relative">
+                  <MoonIconSolid className="h-4 w-4 sm:h-5 sm:w-5 md:h-6 md:w-6 text-indigo-200 group-hover:text-white group-hover:rotate-[360deg] group-hover:scale-110 transition-all duration-500 drop-shadow-[0_0_8px_rgba(199,210,254,0.6)]" />
+                  <SparklesIcon className="absolute -top-1 -right-1 h-3 w-3 text-yellow-300 opacity-0 group-hover:opacity-100 animate-pulse transition-opacity duration-500" />
+                </div>
               )}
             </button>
             <button
               onClick={handleLogout}
-              className="relative p-1 sm:p-1.5 md:p-2 hover:bg-red-500/30 rounded-lg transition-all duration-300 hover:scale-110 group"
+              className="relative p-1.5 sm:p-2 md:p-2.5 rounded-xl transition-all duration-300 hover:scale-110 group overflow-hidden"
               title="Logout"
             >
-              <ArrowRightOnRectangleIcon className="h-4 w-4 sm:h-5 sm:w-5 md:h-6 md:w-6 text-white group-hover:translate-x-1 transition-all duration-300" />
+              <div className="absolute inset-0 bg-gradient-to-br from-red-500/30 to-pink-600/30 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+              <div className="relative">
+                <PowerIcon className="h-4 w-4 sm:h-5 sm:w-5 md:h-6 md:w-6 text-red-100 group-hover:text-white group-hover:rotate-180 transition-all duration-300 drop-shadow-[0_0_8px_rgba(248,113,113,0.5)]" />
+                <div className="absolute inset-0 bg-red-500 rounded-full blur-md opacity-0 group-hover:opacity-40 transition-opacity duration-300"></div>
+              </div>
             </button>
           </div>
         </div>
